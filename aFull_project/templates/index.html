@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF--8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTI Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=1.7">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="dashboard-page-body">
+    <!-- It's recommended to add the notification container for your real-time alerts -->
+    <div id="notification-container"></div>
+    
+    <div class="container">
+        <header>
+            <h1>Cyber-Threat Intelligence Dashboard</h1>
+            {% if session.username %}
+                 <p>Welcome, <strong>{{ session.username }}</strong>!</p>
+            {% endif %}
+            <nav>
+                <a href="#" id="history-btn" title="View History">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.31 2.69-6 6-6s6 2.69 6 6-2.69 6-6 6v-3l-4 4 4 4v-3c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.25 2.52.75-1.23-3.5-2.07V8z"/></svg>
+                    History
+                </a> |
+                {% if session.role == 'admin' %}
+                    <a href="{{ url_for('admin_panel') }}">Admin Panel</a> |
+                {% endif %}
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </nav>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-link active" onclick="openTool(event, 'video')">Deepfake Video</button>
+            <button class="tab-link" onclick="openTool(event, 'image')">Deepfake Image</button>
+            <button class="tab-link" onclick="openTool(event, 'audio')">Deepfake Audio</button>
+            <button class="tab-link" onclick="openTool(event, 'combined')">Email & URL Scan</button>
+            <button class="tab-link" onclick="openTool(event, 'extension')">Browser Extension</button>
+        </div>
+
+        <div class="tool-content-container">
+            <div id="video" class="tool-content active">
+                <h2>Deepfake Video Detector</h2>
+                <form id="video-form" class="tool-form">
+                     <p>Upload a video file to analyze its authenticity.</p>
+                    <input type="file" name="file" id="video-file-input" accept="video/*">
+                    <span class="input-separator">or</span>
+                    <input type="text" id="video-url-input" placeholder="Enter a video URL (YouTube, Facebook, etc.)...">
+                    <button type="submit">Analyze Video</button>
+                </form>
+            </div>
+            <div id="image" class="tool-content">
+                <h2>Deepfake Image Detector</h2>
+                <form id="image-form" class="tool-form">
+                    <p>Upload an image to detect AI-generated faces.</p>
+                    <input type="file" name="file" id="image-file-input" accept="image/*">
+                    <span class="input-separator">or</span>
+                    <input type="text" id="image-url-input" placeholder="Enter a direct image URL...">
+                    <button type="submit">Analyze Image</button>
+                </form>
+            </div>
+            <div id="audio" class="tool-content">
+                <h2>Deepfake Audio Detector</h2>
+                <form id="audio-form" class="tool-form">
+                    <p>Upload an audio file to detect AI-generated voice.</p>
+                    <input type="file" name="file" id="audio-file-input" accept="audio/*">
+                    <span class="input-separator">or</span>
+                    <input type="text" id="audio-url-input" placeholder="Enter a video/audio URL to extract audio from...">
+                    <button type="submit">Analyze Audio</button>
+                </form>
+            </div>
+            <div id="combined" class="tool-content">
+                <h2>Email & URL Threat Scan</h2>
+                <form id="combined-form" class="tool-form">
+                    <p>Paste email content and/or a URL to scan for threats.</p>
+                    <input type="text" id="url-input" placeholder="Enter a URL to scan...">
+                    <textarea id="combined-input" rows="8" placeholder="Paste the full email content here..."></textarea>
+                    <button type="submit">Perform Combined Analysis</button>
+                </form>
+            </div>
+
+            <div id="extension" class="tool-content">
+                <h2>CTI Browser Extension</h2>
+                <p>Supercharge your security by integrating our analysis tools directly into your browser. The extension allows you to scan emails for phishing and malicious links automatically, without copy-pasting.</p>
+                
+                <a href="{{ url_for('static', filename='cti-url-scanner-extension.zip') }}" class="download-button" download>
+                    Download Extension for Chrome/Edge (.zip)
+                </a>
+    
+                <div class="instructions">
+                    <h3>How to Install:</h3>
+                    <ol>
+                        <li>Download the <code>.zip</code> file using the button above.</li>
+                        <li><strong>Unzip the file.</strong> You should have a folder named <code>cti-url-scanner-extension</code>.</li>
+                        <li>In your browser (Chrome or Edge), go to the extensions page by typing <code>edge://extensions</code> or <code>chrome://extensions</code> in the address bar.</li>
+                        <li>Turn on the <strong>"Developer mode"</strong> toggle.</li>
+                        <li>Click the <strong>"Load unpacked"</strong> button.</li>
+                        <li>In the file dialog that opens, select the unzipped <code>cti-url-scanner-extension</code> folder.</li>
+                        <li>The extension is now installed! Pin it to your toolbar for easy access.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div id="status-area" class="card hidden"></div>
+        
+        <div id="result-area" class="card hidden"></div>
+
+    </div>
+
+    <!-- History Modal -->
+    <div id="history-modal" class="modal-overlay hidden">
+        <div class="modal-content card">
+            <button class="modal-close-btn">&times;</button>
+            <h2>My Analysis History</h2>
+            <ul id="history-list">
+                {% if history %}
+                    {% for item in history %}
+                        <li>
+                            <span class="history-timestamp">{{ item.timestamp }}</span>
+                            <span class="history-tool">{{ item.tool }}</span>
+                            <span class="history-details">{{ item.details }}</span>
+                            <span class="history-verdict">{{ item.verdict }}</span>
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <li>No history yet.</li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Don't forget to include the Socket.IO library for notifications -->
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}?v=1.9"></script> 
+</body>
+</html>

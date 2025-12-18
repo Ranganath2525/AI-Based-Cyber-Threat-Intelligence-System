@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analysis Report</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f7f9; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background-color: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1, h2 { color: #333; }
+        .view { display: none; }
+        .active { display: block; }
+        .progress-bar-container { width: 100%; background-color: #e0e0e0; border-radius: 4px; overflow: hidden; margin-top: 10px; }
+        .progress-bar { height: 24px; background-color: #007bff; text-align: center; line-height: 24px; color: white; transition: width 0.4s ease; font-weight: bold; }
+        #progress-text { font-size: 1.1em; text-align: center; margin-top: 5px; color: #555; }
+        .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .result-card { border: 1px solid #ddd; border-radius: 8px; padding: 20px; }
+        .verdict { font-weight: bold; font-size: 1.2em; }
+        .verdict.FAKE { color: #dc3545; }
+        .verdict.REAL, .verdict.No-Audio-Track { color: #28a745; }
+        .verdict.Error { color: #6c757d; }
+        .explanation { font-size: 0.9em; color: #555; background-color: #f8f9fa; border-left: 3px solid #007bff; padding: 10px; margin-top: 10px; white-space: pre-wrap; }
+        .result-image { max-width: 100%; border-radius: 5px; margin-top: 10px; }
+        .error-box { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 15px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Scanning View -->
+        <div id="scanning-view" class="view active">
+            <h1>Analyzing Captured Video...</h1>
+            <p id="progress-text">Initializing...</p>
+            <div class="progress-bar-container">
+                <div id="progress-bar" class="progress-bar" style="width: 0%;">0%</div>
+            </div>
+            <p style="text-align: center; color: #666; margin-top: 20px;">This may take a few minutes depending on the video and server load.</p>
+        </div>
+
+        <!-- Result View -->
+        <div id="result-view" class="view">
+            <h1>Analysis Report</h1>
+            <div class="result-grid">
+                <div class="result-card">
+                    <h2>Video Analysis</h2>
+                    <p><strong>Verdict:</strong> <span id="video-verdict" class="verdict"></span></p>
+                    <p><strong>Avg. Fake Confidence:</strong> <span id="video-confidence"></span></p>
+                    <h4>AI Explanation:</h4>
+                    <div id="video-explanation" class="explanation"></div>
+                </div>
+                <div class="result-card">
+                    <h2>Audio Analysis</h2>
+                    <p><strong>Verdict:</strong> <span id="audio-verdict" class="verdict"></span></p>
+                    <p><strong>Confidence:</strong> <span id="audio-confidence"></span></p>
+                    <h4>AI Explanation:</h4>
+                    <div id="audio-explanation" class="explanation"></div>
+                </div>
+            </div>
+            <div class="result-card" style="margin-top: 20px;">
+                <h3>Annotated Frame</h3>
+                <img id="result-image" src="" alt="Annotated Frame" class="result-image">
+            </div>
+        </div>
+        
+        <!-- Error View -->
+        <div id="error-view" class="view">
+            <h1>Analysis Failed</h1>
+            <div id="error-box" class="error-box"></div>
+        </div>
+    </div>
+    <script src="results.js"></script>
+</body>
+</html>

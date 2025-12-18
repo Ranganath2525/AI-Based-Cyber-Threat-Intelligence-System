@@ -1,0 +1,22 @@
+# Virtual environment
+venv/
+
+# Large ML models
+saved_model/
+*.h5
+*.pkl
+*.pt
+*.onnx
+
+# FFmpeg & binaries
+ffmpeg-8.0-essentials_build/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Media
+*.mp4
+*.avi
+*.mov
+*.wav

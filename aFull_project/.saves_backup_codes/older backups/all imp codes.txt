@@ -1,0 +1,1447 @@
+app.py
+
+from flask import Flask, render_template, request, jsonify, Response, session, redirect, url_for, flash
+from werkzeug.utils import secure_filename
+from flask_cors import CORS
+import os
+import sys
+import re
+import json
+import uuid
+from functools import wraps
+from datetime import datetime
+import google.generativeai as genai
+import base64
+from PIL import Image
+import io
+import mimetypes
+import jwt
+from datetime import datetime, timedelta
+from concurrent.futures import ThreadPoolExecutor
+
+# --- Add project subdirectories to the Python path ---
+sys.path.append(os.path.abspath('deepfake_video_bhuvanesh'))
+sys.path.append(os.path.abspath('deepfake_audio_model_rangnath'))
+sys.path.append(os.path.abspath('email_phising_tejaswi'))
+sys.path.append(os.path.abspath('End-to-End-Malicious-URL-Detection_NReshwar'))
+
+# --- Import our engine modules ---
+from deepfake_video_engine import load_model as load_video_model, analyze_video, analyze_image
+from deepfake_audio_engine import load_model as load_audio_model, analyze_audio
+from email_engine import load_model as load_email_model, analyze_email
+from url_engine import load_model as load_url_model, analyze_url
+
+# --- Gemini AI Configuration ---
+try:
+    with open("gemini_api_key.txt", "r") as f:
+        GEMINI_API_KEY = f.read().strip()
+    if not GEMINI_API_KEY:
+        raise ValueError("API Key is empty in the file.")
+    genai.configure(api_key=GEMINI_API_KEY)
+    print("Gemini AI configured successfully.")
+except FileNotFoundError:
+    GEMINI_API_KEY = None
+    print("WARNING: 'gemini_api_key.txt' not found. AI explanations will be disabled.")
+except Exception as e:
+    GEMINI_API_KEY = None
+    print(f"ERROR: Could not initialize Gemini AI. Explanations disabled. Reason: {e}")
+
+def get_gemini_explanation(analysis_type, verdict, result_data, file_path=None, raw_text=None, context=None):
+    if not GEMINI_API_KEY:
+        return "AI explanations are unavailable. The Gemini API key is not configured."
+
+    try:
+        # The logic for preparing and sending the prompt is wrapped
+        model = genai.GenerativeModel('gemini-1.5-flash-latest')
+        
+        result_data_for_prompt = result_data.copy()
+        result_data_for_prompt.pop('result_image', None)
+        result_data_for_prompt.pop('waveform_image', None)
+        
+        # --- MODIFIED: New combined and refined prompt ---
+        prompt_text = f"""You are an AI assistant specializing in digital media analysis. Your goal is to explain a verdict from a local model.
+
+Your task is to generate a bullet-point list explaining the verdict.
+- Base your explanation ONLY on the contents of the provided media/text.
+- Reference specific, observable details (e.g., "unnatural lighting on the face," "robotic tone in the voice").
+- Do not repeat the confidence scores or percentages.
+- Do not add any introductory or concluding sentences.
+- Your final output must be ONLY the bullet points, with each point on a new line starting with a '*' character.
+
+--- EXAMPLES of desired output style ---
+- For a FAKE image of Tom Cruise on Iron Man, you might say:
+* The lighting on Tom Cruise's face does not match the metallic reflections from the suit.
+* There are blurring artifacts around the jawline.
+- For a FAKE audio, you might say:
+* A slight metallic or robotic tone can be heard.
+* The speaker's breathing patterns sound unnatural.
+- For a Phishing email, you might say:
+* The email creates a false sense of urgency by mentioning an "immediate suspension".
+* The sender's address does not match the company's official domain.
+- For a REAL video, you might say:
+* The lip movements sync naturally with the audio.
+* Shadows and lighting appear consistent across the scene.
+--- END OF EXAMPLES ---
+
+Now, provide your analysis for the following:
+
+Analysis Type: {analysis_type}
+Local Model Verdict: "{verdict.upper()}"
+Local Model Data: {json.dumps(result_data_for_prompt)}
+"""
+        
+        if raw_text:
+            prompt_text += f"\n\nOriginal Input Text:\n---\n{raw_text}\n---"
+        
+        prompt_parts = [prompt_text]
+        
+        file_size_limit = 25 * 1024 * 1024 # 25 MB
+
+        if file_path and os.path.exists(file_path):
+            file_size = os.path.getsize(file_path)
+            mime_type, _ = mimetypes.guess_type(file_path)
+            
+            if not mime_type:
+                pass
+            elif ('video' in mime_type or 'audio' in mime_type) and file_size < file_size_limit:
+                print(f"Uploading media '{os.path.basename(file_path)}' to Gemini...")
+                media_file = genai.upload_file(path=file_path)
+                prompt_parts.append(media_file)
+            elif 'image' in mime_type:
+                print(f"Attaching original image '{os.path.basename(file_path)}' to Gemini prompt...")
+                img = Image.open(file_path)
+                prompt_parts.append(img)
+
+        print("Sending descriptive prompt to Gemini...")
+        response = model.generate_content(prompt_parts)
+        
+        if 'media_file' in locals() and media_file:
+            genai.delete_file(media_file.name)
+            print(f"Cleaned up temporary Gemini file: {media_file.name}")
+
+        return response.text
+
+    except Exception as e:
+        # This is the crucial change: if anything fails, we return a formatted error
+        # instead of letting the exception crash the parent function.
+        error_message = f"Could not generate AI explanation. The API call failed. (Error: {e})"
+        print(f"ERROR [Gemini]: {error_message}")
+        return error_message
+
+app = Flask(__name__)
+# --- THIS IS THE FIX ---
+# We are now providing a more detailed configuration for CORS.
+# This explicitly tells the server to allow requests from any origin ('*')
+# and to allow the 'Content-Type' header, which is essential for our login request.
+CORS(app, resources={r"/ext/*": {"origins": "*"}})
+app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['SECRET_KEY'] = 'a-very-secret-key-change-it-later'
+USERS_FILE = 'users.json'
+HISTORY_FILE = 'history.json'
+
+# --- (The rest of the app.py file is unchanged) ---
+def load_users():
+    if not os.path.exists(USERS_FILE):
+        return {"admin": {"password": "admin", "email": "admin@example.com", "role": "admin", "active": True}}
+    with open(USERS_FILE, 'r') as f:
+        return json.load(f)
+
+def save_users(users):
+    with open(USERS_FILE, 'w') as f:
+        json.dump(users, f, indent=4)
+
+def load_history():
+    if not os.path.exists(HISTORY_FILE):
+        return {}
+    with open(HISTORY_FILE, 'r') as f:
+        return json.load(f)
+
+
+def generate_jwt(username):
+    """Generates a JWT for a given user that expires in 24 hours."""
+    payload = {
+        'sub': username,
+        'iat': datetime.utcnow(),
+        'exp': datetime.utcnow() + timedelta(hours=24)
+    }
+    return jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
+
+def get_user_from_jwt(token):
+    """Decodes a JWT and returns the username if the token is valid."""
+    try:
+        payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+        return payload['sub']
+    except (jwt.ExpiredSignatureError, jwt.InvalidTokenError):
+        return None    
+
+def save_history(history):
+    with open(HISTORY_FILE, 'w') as f:
+        json.dump(history, f, indent=4)
+
+def add_history_entry(username, tool, verdict, details):
+    history = load_history()
+    if username not in history:
+        history[username] = []
+    
+    entry = {
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "tool": tool,
+        "verdict": verdict,
+        "details": details
+    }
+    history[username].insert(0, entry)
+    save_history(history)
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' not in session:
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' not in session or session.get('role') != 'admin':
+            flash("You don't have permission to access this page.", "error")
+            return redirect(url_for('dashboard'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+ALLOWED_MEDIA_EXTENSIONS = {'mp4', 'mov', 'avi', 'mkv', 'wav', 'mp3', 'flac', 'jpg', 'jpeg', 'png', 'webp'}
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_MEDIA_EXTENSIONS
+
+@app.route('/', methods=['GET', 'POST'])
+def login():
+    if 'username' in session:
+        return redirect(url_for('dashboard'))
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        users = load_users()
+        if username in users and users[username]['password'] == password:
+            if users[username]['active']:
+                session['username'] = username
+                session['role'] = users[username]['role']
+                return redirect(url_for('dashboard'))
+            else:
+                flash("Your account is pending approval.", "warning")
+        else:
+            flash("Invalid username or password.", "error")
+    return render_template('login.html')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        email = request.form['email']
+        users = load_users()
+        if username in users:
+            flash("Username already exists.", "error")
+        else:
+            users[username] = {'password': password, 'email': email, 'role': 'user', 'active': False}
+            save_users(users)
+            flash("Registration successful! Please wait for admin approval.", "success")
+            return redirect(url_for('login'))
+    return render_template('register.html')
+
+# In app.py
+
+@app.route('/ext/login', methods=['POST'])
+def ext_login():
+    """Logs in a user from the extension and returns a JWT."""
+    data = request.get_json()
+    if not data or 'username' not in data or 'password' not in data:
+        return jsonify({'error': 'Username and password are required.'}), 400
+
+    username = data['username']
+    password = data['password']
+    
+    users = load_users()
+    user = users.get(username)
+
+    if user and user['password'] == password and user['active']:
+        # Credentials are valid, generate and return a token
+        token = generate_jwt(username)
+        return jsonify({'token': token})
+    else:
+        # Invalid credentials
+        return jsonify({'error': 'Invalid username or password.'}), 401
+
+@app.route('/ext/analyze_urls_token', methods=['POST'])
+def ext_analyze_urls_token():
+    """
+    Analyzes URLs concurrently using a thread pool for high performance.
+    Authenticates using a JWT.
+    """
+    auth_header = request.headers.get('Authorization')
+    if not auth_header or not auth_header.startswith('Bearer '):
+        return jsonify({'error': 'Authorization token is missing or invalid.'}), 401
+    
+    token = auth_header.split(' ')[1]
+    username = get_user_from_jwt(token)
+
+    if not username:
+        return jsonify({'error': 'Invalid or expired token.'}), 401
+
+    data = request.get_json()
+    if not data or 'urls' not in data or not isinstance(data['urls'], list):
+        return jsonify({'error': 'Invalid request. A JSON array of URLs is required.'}), 400
+
+    urls_to_scan = data['urls']
+    analysis_results = []
+
+    # In app.py
+
+@app.route('/ext/analyze_email_content', methods=['POST'])
+def ext_analyze_email_content():
+    """
+    Analyzes both the text content of an email and all URLs within it.
+    Authenticates using a JWT.
+    """
+    # 1. Authenticate the request using the JWT (same as before)
+    auth_header = request.headers.get('Authorization')
+    if not auth_header or not auth_header.startswith('Bearer '):
+        return jsonify({'error': 'Authorization token is missing or invalid.'}), 401
+    
+    token = auth_header.split(' ')[1]
+    username = get_user_from_jwt(token)
+
+    if not username:
+        return jsonify({'error': 'Invalid or expired token.'}), 401
+
+    # 2. Get the email text and URLs from the request
+    data = request.get_json()
+    email_text = data.get('email_text', '')
+    urls_to_scan = data.get('urls', [])
+
+    # 3. Analyze the email text for phishing/spam
+    email_verdict = "Not Scanned"
+    if email_text:
+        email_result, email_err = analyze_email(email_text)
+        if email_err:
+            email_verdict = "Analysis Error"
+        else:
+            email_verdict = "Phishing" if email_result.get('is_phishing') else "Not Phishing"
+        add_history_entry(username, "Email Scan (Extension)", email_verdict, f"{email_text[:50]}...")
+
+    # 4. Analyze all URLs concurrently (using our existing high-performance code)
+    url_analysis_results = []
+    if urls_to_scan:
+        def analyze_single_url_wrapper(url):
+            result, err = analyze_url(url)
+            if err: return {"url": url, "verdict": "Error", "error": str(err)}
+            verdict = "Malicious" if result.get('is_malicious') else "Safe"
+            add_history_entry(username, "URL Scan (Extension)", verdict, f"{url[:50]}...")
+            return {"url": url, "verdict": verdict, "risk_score": result.get('risk_score')}
+        
+        with ThreadPoolExecutor(max_workers=10) as executor:
+            url_analysis_results = list(executor.map(analyze_single_url_wrapper, urls_to_scan))
+
+    # 5. Return the combined results
+    return jsonify({
+        "email_verdict": email_verdict,
+        "url_results": url_analysis_results
+    })
+
+    # --- THIS IS THE PERFORMANCE UPGRADE ---
+    
+    def analyze_single_url_wrapper(url):
+        """A helper function to safely analyze one URL and handle its history entry."""
+        try:
+            result, err = analyze_url(url)
+            if err:
+                return {"url": url, "verdict": "Error", "error": str(err)}
+            else:
+                verdict = "Malicious" if result.get('is_malicious') else "Safe"
+                # Add history entry inside the thread for efficiency
+                add_history_entry(username, "URL Scan (Extension)", verdict, f"{url[:50]}...")
+                return {
+                    "url": url, 
+                    "verdict": verdict, 
+                    "risk_score": result.get('risk_score')
+                }
+        except Exception as e:
+            return {"url": url, "verdict": "Error", "error": f"Critical failure during analysis: {e}"}
+
+    # Use a ThreadPoolExecutor to run all URL analyses at the same time.
+    # We create a pool of worker threads (up to 10 at a time).
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        # The executor.map function applies the wrapper to each URL in the list
+        # and collects the results in the same order.
+        analysis_results = list(executor.map(analyze_single_url_wrapper, urls_to_scan))
+
+    # --- END OF PERFORMANCE UPGRADE ---
+    
+    return jsonify({"results": analysis_results})
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash("You have been logged out.", "success")
+    return redirect(url_for('login'))
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    history = load_history()
+    user_history = history.get(session['username'], [])
+    return render_template('index.html', history=user_history)
+
+@app.route('/admin')
+@admin_required
+def admin_panel():
+    users = load_users()
+    history = load_history()
+    return render_template('admin_panel.html', users=users, history=history)
+
+@app.route('/activate_user/<username>', methods=['POST'])
+@admin_required
+def activate_user(username):
+    users = load_users()
+    if username in users:
+        users[username]['active'] = True
+        save_users(users)
+        flash(f"User {username} has been activated.", "success")
+    else:
+        flash(f"User {username} not found.", "error")
+    return redirect(url_for('admin_panel'))
+
+@app.route('/upload_video', methods=['POST'])
+@login_required
+def upload_video():
+    file = request.files.get('file')
+    if not file or not allowed_file(file.filename):
+        return jsonify({'error': 'Invalid file type'}), 400
+    filename = secure_filename(file.filename)
+    task_id = f"{uuid.uuid4()}_{filename}"
+    path = os.path.join(app.config['UPLOAD_FOLDER'], task_id)
+    file.save(path)
+    return jsonify({'task_id': task_id, 'filename': filename})
+
+@app.route('/stream_video_analysis/<task_id>')
+@login_required
+def stream_video_analysis(task_id):
+    # This route no longer needs its own try/except for the explanation part,
+    # because get_gemini_explanation is now safe.
+    username = session.get('username')
+    filename = request.args.get('filename', 'video_file')
+    path = os.path.join(app.config['UPLOAD_FOLDER'], task_id)
+    if '..' in task_id or not os.path.exists(path):
+        return Response("Invalid task ID", status=404)
+
+    def generate(current_user):
+        final_result = None
+        try:
+            for data in analyze_video(path):
+                if data.get("type") == "result":
+                    final_result = data
+                    combined_verdict = f"Video: {data['verdict']}, Audio: {data['audio_verdict']}"
+                    add_history_entry(current_user, "Deepfake Video", combined_verdict, f"{filename}")
+                yield f"data: {json.dumps(data)}\n\n"
+
+            if final_result:
+                # This part is now safer. Even if Gemini fails, the stream won't crash.
+                video_verdict = final_result['verdict']
+                video_exp = get_gemini_explanation("Video Analysis", video_verdict, final_result, file_path=path)
+                yield f"data: {json.dumps({'type': 'video_explanation', 'explanation': video_exp})}\n\n"
+
+                video_context = f"The visual analysis concluded: '{video_verdict}'. Explanation: '{video_exp}'"
+                audio_verdict = final_result['audio_verdict']
+                audio_exp = get_gemini_explanation("Audio Analysis", audio_verdict, final_result, file_path=path, context=video_context)
+                yield f"data: {json.dumps({'type': 'audio_explanation', 'explanation': audio_exp})}\n\n"
+        
+        except Exception as e:
+            # This will now only catch errors from the local analysis part.
+            print(f"ERROR in local analysis stream: {e}")
+            yield f"data: {json.dumps({'type': 'error', 'message': f'A critical error occurred during local analysis: {e}'})}\n\n"
+        finally:
+            if os.path.exists(path):
+                os.remove(path)
+
+    return Response(generate(username), mimetype='text/event-stream')
+
+@app.route('/predict_image', methods=['POST'])
+@login_required
+def predict_image():
+    file = request.files.get('file')
+    if not file or not allowed_file(file.filename):
+        return jsonify({'error': 'Invalid file'}), 400
+    filename = secure_filename(file.filename)
+    unique_filename = f"{uuid.uuid4()}_{filename}"
+    path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
+    file.save(path)
+    
+    try:
+        result, err = analyze_image(path)
+        if err:
+            return jsonify({'error': err}), 500
+        
+        verdict = "FAKE" if result['average_confidence'] > 0.5 else "REAL"
+        add_history_entry(session['username'], "Deepfake Image", verdict, f"{filename} ({result['average_confidence']:.2%})")
+        
+        explanation = get_gemini_explanation("Deepfake Image", verdict, result, file_path=path)
+        
+        return jsonify({
+            "verdict": verdict, 
+            "average_confidence": result['average_confidence'], 
+            "result_image": result['result_image'],
+            "explanation": explanation
+        })
+    finally:
+        if os.path.exists(path):
+            os.remove(path)
+
+
+@app.route('/predict_audio', methods=['POST'])
+@login_required
+def predict_audio():
+    file = request.files.get('file')
+    if not file or not allowed_file(file.filename):
+        return jsonify({'error': 'Invalid file'}), 400
+    filename = secure_filename(file.filename)
+    unique_filename = f"{uuid.uuid4()}_{filename}"
+    path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
+    file.save(path)
+    try:
+        result, err = analyze_audio(path)
+        if err:
+            return jsonify({'error': err}), 500
+        
+        verdict = "FAKE" if result['prediction'] == 0 else "REAL"
+        add_history_entry(session['username'], "Deepfake Audio", verdict, f"{filename} ({result['confidence']:.2%})")
+        
+        explanation = get_gemini_explanation("Deepfake Audio", verdict, result, file_path=path)
+        
+        return jsonify({
+            "verdict": verdict, 
+            "confidence": result['confidence'],
+            "explanation": explanation,
+            "waveform_image": result.get("waveform_image")
+        })
+    finally:
+        if os.path.exists(path):
+            os.remove(path)
+
+@app.route('/predict_combined', methods=['POST'])
+@login_required
+def predict_combined():
+    email_text = request.json.get('text', '')
+    url_text = request.json.get('url', '')
+    if not email_text and not url_text:
+        return jsonify({'error': 'No input provided'}), 400
+    
+    email_explanation = None
+    email_verdict = "Not Scanned"
+    if email_text:
+        email_result, email_err = analyze_email(email_text)
+        if email_err:
+            return jsonify({'error': f"Email analysis failed: {email_err}"}), 500
+        email_verdict = "Phishing" if email_result.get('is_phishing') else "Not Phishing"
+        add_history_entry(session['username'], "Email Scan", email_verdict, f"{email_text[:30]}...")
+        email_explanation = get_gemini_explanation("Email Phishing", email_verdict, email_result, raw_text=email_text)
+
+    urls_to_scan = re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', email_text)
+    if url_text and url_text not in urls_to_scan:
+        urls_to_scan.append(url_text)
+    
+    url_results = []
+    if urls_to_scan:
+        for url in urls_to_scan:
+            result, err = analyze_url(url)
+            if not err:
+                verdict = "Malicious" if result.get('is_malicious') else "Safe"
+                explanation = get_gemini_explanation("Malicious URL", verdict, result, raw_text=url)
+                url_results.append({
+                    "url": url, 
+                    "verdict": verdict, 
+                    "risk_score": result.get('risk_score'),
+                    "explanation": explanation
+                })
+                add_history_entry(session['username'], "URL Scan", verdict, f"{url[:50]}...")
+    
+    return jsonify({
+        "email_verdict": email_verdict, 
+        "email_explanation": email_explanation,
+        "urls_found": len(urls_to_scan), 
+        "url_analysis": url_results
+    })
+
+def load_all_models():
+    print("--- Pre-loading all AI models into memory ---")
+    load_video_model()
+    load_audio_model()
+    load_url_model()
+    load_email_model()
+    print("\n--- All models loaded. Server is ready. ---")
+
+if __name__ == '__main__':
+    if not os.path.exists(app.config['UPLOAD_FOLDER']):
+        os.makedirs(app.config['UPLOAD_FOLDER'])
+    load_all_models()
+    app.run(host='0.0.0.0', port=5000, debug=True)
+
+
+index.html
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF--8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CTI Dashboard</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=1.7">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body class="dashboard-page-body">
+
+    <!-- It's recommended to add the notification container for your real-time alerts -->
+
+    <div id="notification-container"></div>
+
+    
+
+    <div class="container">
+
+        <header>
+
+            <h1>Cyber-Threat Intelligence Dashboard</h1>
+
+            {% if session.username %}
+
+                 <p>Welcome, <strong>{{ session.username }}</strong>!</p>
+
+            {% endif %}
+
+            <nav>
+
+                {% if session.role == 'admin' %}
+
+                    <a href="{{ url_for('admin_panel') }}">Admin Panel</a> |
+
+                {% endif %}
+
+                <a href="{{ url_for('logout') }}">Logout</a>
+
+            </nav>
+
+        </header>
+
+
+
+        <div class="tabs">
+
+            <button class="tab-link active" onclick="openTool(event, 'video')">Deepfake Video</button>
+
+            <button class="tab-link" onclick="openTool(event, 'image')">Deepfake Image</button>
+
+            <button class="tab-link" onclick="openTool(event, 'audio')">Deepfake Audio</button>
+
+            <button class="tab-link" onclick="openTool(event, 'combined')">Email & URL Scan</button>
+
+            <!-- NEW: The Browser Extension Tab Button -->
+
+            <button class="tab-link" onclick="openTool(event, 'extension')">Browser Extension</button>
+
+        </div>
+
+
+
+        <div class="tool-content-container">
+
+            <div id="video" class="tool-content active">
+
+                <h2>Deepfake Video Detector</h2>
+
+                <form id="video-form" class="tool-form">
+
+                     <p>Upload a video file to analyze its authenticity.</p>
+
+                    <input type="file" name="file" id="video-file-input" accept="video/*" required>
+
+                    <button type="submit">Analyze Video</button>
+
+                </form>
+
+            </div>
+
+            <div id="image" class="tool-content">
+
+                <h2>Deepfake Image Detector</h2>
+
+                <form id="image-form" class="tool-form">
+
+                    <p>Upload an image to detect AI-generated faces.</p>
+
+                    <input type="file" name="file" id="image-file-input" accept="image/*" required>
+
+                    <button type="submit">Analyze Image</button>
+
+                </form>
+
+            </div>
+
+            <div id="audio" class="tool-content">
+
+                <h2>Deepfake Audio Detector</h2>
+
+                <form id="audio-form" class="tool-form">
+
+                    <p>Upload an audio file to detect AI-generated voice.</p>
+
+                    <input type="file" name="file" id="audio-file-input" accept="audio/*" required>
+
+                    <button type="submit">Analyze Audio</button>
+
+                </form>
+
+            </div>
+
+            <div id="combined" class="tool-content">
+
+                <h2>Email & URL Threat Scan</h2>
+
+                <form id="combined-form" class="tool-form">
+
+                    <p>Paste email content and/or a URL to scan for threats.</p>
+
+                    <input type="text" id="url-input" placeholder="Enter a URL to scan...">
+
+                    <textarea id="combined-input" rows="8" placeholder="Paste the full email content here..."></textarea>
+
+                    <button type="submit">Perform Combined Analysis</button>
+
+                </form>
+
+            </div>
+
+
+
+            <!-- NEW: The Browser Extension Content Pane -->
+
+            <div id="extension" class="tool-content">
+
+                <h2>CTI Browser Extension</h2>
+
+                <p>Supercharge your security by integrating our analysis tools directly into your browser. The extension allows you to scan emails for phishing and malicious links automatically, without copy-pasting.</p>
+
+                
+
+                <!-- This link assumes 'cti-url-scanner-extension.zip' is in your 'static' folder -->
+
+                <a href="{{ url_for('static', filename='cti-url-scanner-extension.zip') }}" class="download-button" download>
+
+                    Download Extension for Chrome/Edge (.zip)
+
+                </a>
+
+    
+
+                <div class="instructions">
+
+                    <h3>How to Install:</h3>
+
+                    <ol>
+
+                        <li>Download the <code>.zip</code> file using the button above.</li>
+
+                        <li><strong>Unzip the file.</strong> You should have a folder named <code>cti-url-scanner-extension</code>.</li>
+
+                        <li>In your browser (Chrome or Edge), go to the extensions page by typing <code>edge://extensions</code> or <code>chrome://extensions</code> in the address bar.</li>
+
+                        <li>Turn on the <strong>"Developer mode"</strong> toggle.</li>
+
+                        <li>Click the <strong>"Load unpacked"</strong> button.</li>
+
+                        <li>In the file dialog that opens, select the unzipped <code>cti-url-scanner-extension</code> folder.</li>
+
+                        <li>The extension is now installed! Pin it to your toolbar for easy access.</li>
+
+                    </ol>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div id="status-area" class="card hidden"></div>
+
+        
+
+        <div id="result-area" class="card hidden"></div>
+
+
+
+        <div id="history-area" class="card">
+
+            <h2>My Analysis History</h2>
+
+            <ul id="history-list">
+
+                {% if history %}
+
+                    {% for item in history %}
+
+                        <li>
+
+                            <span class="history-timestamp">{{ item.timestamp }}</span>
+
+                            <span class="history-tool">{{ item.tool }}</span>
+
+                            <span class="history-details">{{ item.details }}</span>
+
+                            <span class="history-verdict">{{ item.verdict }}</span>
+
+                        </li>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <li>No history yet.</li>
+
+                {% endif %}
+
+            </ul>
+
+        </div>
+
+
+
+    </div>
+
+
+
+    <!-- Don't forget to include the Socket.IO library for notifications -->
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+    <script src="{{ url_for('static', filename='script.js') }}?v=1.9"></script> 
+
+</body>
+
+</html>
+
+style.css
+/* --- THEME & FONT VARIABLES --- */
+:root {
+    /* DARK MODE (Default) */
+    --bg-main: #0a0c10;
+    --bg-container: rgba(20, 30, 50, 0.6);
+    --bg-element: rgba(10, 20, 40, 0.7);
+    --text-primary: #e6f1ff;
+    --text-secondary: #c1cbe0;
+    --glow-primary: #00ffff; /* Cyan */
+    --glow-secondary: #4a90e2; /* Blue */
+    --border-color: rgba(74, 144, 226, 0.2);
+    --border-radius-large: 12px;
+    --border-radius-medium: 8px;
+    --shadow-color: rgba(0, 255, 255, 0.15);
+    --font-main: 'Segoe UI', 'Roboto', sans-serif;
+    
+    /* Universal transition for smooth theme changes */
+    --theme-transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+
+/* LIGHT MODE VARIABLES */
+body.light-mode {
+    --bg-main: #f4f7f9;
+    --bg-container: #ffffff;
+    --bg-element: #f8f9fa;
+    --text-primary: #212529;
+    --text-secondary: #6c757d;
+    --glow-primary: #007bff; /* Standard Blue */
+    --glow-secondary: #0056b3; /* Darker Blue */
+    --border-color: #dee2e6;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+/* --- KEYFRAME ANIMATIONS --- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes moveGrid {
+    from { background-position: 0 0; }
+    to { background-position: -60px -60px; }
+}
+
+/* --- GENERAL BODY & ELEMENT STYLES --- */
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    margin: 0;
+    padding: 24px;
+    position: relative;
+    transition: var(--theme-transition);
+    box-sizing: border-box; /* Ensures padding doesn't add to width */
+}
+
+/* Animated grid background for dark mode */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+        linear-gradient(90deg, rgba(74, 144, 226, 0.1) 1px, transparent 1px),
+        linear-gradient(rgba(74, 144, 226, 0.1) 1px, transparent 1px);
+    background-size: 30px 30px;
+    opacity: 0.2;
+    z-index: -1;
+    animation: moveGrid 4s linear infinite;
+    transition: opacity 0.4s ease;
+}
+
+/* Hide grid in light mode */
+body.light-mode::before {
+    opacity: 0;
+}
+
+/* Universal styles for all inputs/buttons */
+input, textarea, button { 
+    font-family: var(--font-main); 
+}
+
+/* --- LOGIN & REGISTER PAGE SPECIFIC STYLES --- */
+.login-page-body { 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.login-wrapper {
+    width: 100%;
+    max-width: 420px;
+}
+
+.login-box {
+    background: var(--bg-container);
+    backdrop-filter: blur(12px);
+    padding: 40px;
+    border-radius: var(--border-radius-large);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 0 25px var(--shadow-color);
+    text-align: center;
+    animation: fadeIn 0.8s ease-out;
+}
+
+.login-box .input-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.login-box input { 
+    width: 100%; 
+    padding: 12px; 
+    border: 1px solid var(--border-color);
+    border-radius: 6px; 
+    background: var(--bg-element); 
+    color: var(--text-primary); 
+    font-size: 16px; 
+    box-sizing: border-box;
+}
+
+.login-box .login-button { 
+    background: linear-gradient(90deg, var(--glow-primary), var(--glow-secondary)); 
+    color: var(--bg-main); 
+    font-weight: bold;
+    padding: 12px 20px; 
+    border: none;
+    border-radius: 6px; 
+    cursor: pointer; 
+    font-size: 16px; 
+    width: 100%;
+}
+
+
+/* --- DASHBOARD & MAIN CONTAINER STYLES --- */
+.container { 
+    max-width: 900px; 
+    margin: 0 auto;
+    background: var(--bg-container);
+    backdrop-filter: blur(12px);
+    padding: 30px;
+    border-radius: var(--border-radius-large);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 0 25px var(--shadow-color);
+    transition: var(--theme-transition), box-shadow 0.4s ease;
+}
+
+header { 
+    text-align: center; 
+    border-bottom: 1px solid var(--border-color); 
+    padding-bottom: 20px; 
+    margin-bottom: 20px; 
+    position: relative;
+    transition: var(--theme-transition);
+}
+
+header h1 { 
+    font-size: 2.2rem; 
+    background: linear-gradient(90deg, var(--glow-primary), var(--glow-secondary)); 
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+header p { color: var(--text-secondary); }
+nav { margin-top: 1rem; }
+nav a { color: var(--glow-primary); transition: color 0.3s ease; }
+nav a:hover { color: var(--glow-secondary); }
+
+/* --- THEME TOGGLE BUTTON --- */
+#theme-toggle {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: var(--theme-transition), transform 0.3s ease;
+}
+#theme-toggle:hover {
+    transform: scale(1.1) rotate(15deg);
+    border-color: var(--glow-primary);
+}
+#theme-toggle svg {
+    width: 20px;
+    height: 20px;
+    fill: var(--text-secondary);
+    transition: fill 0.3s ease;
+}
+.icon-sun, .icon-moon { display: none; }
+body:not(.light-mode) .icon-sun { display: block; }
+body.light-mode .icon-moon { display: block; }
+
+/* --- TABS & FORMS --- */
+.tabs { display: flex; justify-content: space-around; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); transition: var(--theme-transition); }
+.tab-link { background: none; border: none; padding: 15px 20px; cursor: pointer; font-size: 16px; color: var(--text-secondary); position: relative; transition: color 0.3s ease; }
+.tab-link.active { color: var(--glow-primary); border-bottom: 3px solid var(--glow-primary); }
+
+.tool-content { display: none; padding: 20px; background: var(--bg-element); border-radius: var(--border-radius-medium); transition: var(--theme-transition); }
+.tool-content.active { display: block; }
+.tool-content h2 { border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-top: 0; }
+.tool-content input[type="file"], .tool-content input[type="text"], .tool-content textarea { 
+    width: 100%; 
+    box-sizing: border-box;
+    padding: 12px; 
+    border-radius: 6px; 
+    border: 1px solid var(--border-color); 
+    background: var(--bg-element); 
+    color: var(--text-primary); 
+    transition: var(--theme-transition), box-shadow 0.3s ease;
+}
+.tool-content input[type="file"]:focus, .tool-content input[type="text"]:focus, .tool-content textarea:focus {
+    outline: none;
+    border-color: var(--glow-primary);
+    box-shadow: 0 0 8px var(--shadow-color);
+}
+.tool-content button[type="submit"] { 
+    background: linear-gradient(90deg, var(--glow-primary), var(--glow-secondary)); 
+    color: var(--bg-main); 
+    padding: 12px 20px; 
+    border: none;
+    border-radius: 6px; 
+    cursor: pointer; 
+    font-size: 16px; 
+    font-weight: bold; 
+    width: 100%;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+.tool-content button[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px var(--shadow-color);
+}
+
+/* --- RESULT & STATUS AREAS --- */
+#result-area { margin-top: 20px; padding: 20px; background: var(--bg-element); border-radius: var(--border-radius-medium); border-left: 4px solid var(--glow-primary); animation: fadeIn 0.5s; }
+.hidden { display: none !important; }
+
+/* ... And any other specific styles you have ... */
+
+
+/* --- NEW: Browser Extension Section Styles --- */
+/* --- Browser Extension Section Styles --- */
+
+.download-button {
+    display: inline-block;
+    padding: 12px 24px;
+    margin: 20px 0;
+    background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow));
+    color: var(--bg-dark);
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.download-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 20px rgba(0, 255, 255, 0.3);
+}
+
+.instructions {
+    margin-top: 30px;
+    text-align: left;
+    background: rgba(10, 20, 40, 0.5);
+    padding: 20px;
+    border-radius: var(--border-radius-medium);
+    border-left: 3px solid var(--secondary-glow);
+}
+
+.instructions h3 {
+    margin-top: 0;
+    color: var(--secondary-glow);
+}
+
+.instructions ol {
+    padding-left: 20px;
+    line-height: 1.8;
+}
+
+.instructions li::marker {
+    color: var(--primary-glow);
+}
+
+.instructions code {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', Courier, monospace;
+    color: var(--primary-glow);
+}
+
+"D:\PROJECT\CTI\aFull_project\aFull_project\users.json"
+"D:\PROJECT\CTI\aFull_project\aFull_project\deepfake_audio_model_rangnath"
+"D:\PROJECT\CTI\aFull_project\aFull_project\deepfake_video_bhuvanesh"
+"D:\PROJECT\CTI\aFull_project\aFull_project\email_phising_tejaswi"
+"D:\PROJECT\CTI\aFull_project\aFull_project\End-to-End-Malicious-URL-Detection_NReshwar"
+"D:\PROJECT\CTI\aFull_project\aFull_project\face_detector"
+"D:\PROJECT\CTI\aFull_project\aFull_project\local_bert_tokenizer"
+"D:\PROJECT\CTI\aFull_project\aFull_project\new front end"
+"D:\PROJECT\CTI\aFull_project\aFull_project\static"
+"D:\PROJECT\CTI\aFull_project\aFull_project\templates"
+"D:\PROJECT\CTI\aFull_project\aFull_project\uploads"
+"D:\PROJECT\CTI\aFull_project\aFull_project\all28-8.zip"
+"D:\PROJECT\CTI\aFull_project\aFull_project\app.py"
+"D:\PROJECT\CTI\aFull_project\aFull_project\app.py.withpromtai.txt"
+"D:\PROJECT\CTI\aFull_project\aFull_project\cli all codes to txt.txt"
+"D:\PROJECT\CTI\aFull_project\aFull_project\download_tokenizer.py"
+"D:\PROJECT\CTI\aFull_project\aFull_project\fullcodesbeforegemini20-08.txt"
+"D:\PROJECT\CTI\aFull_project\aFull_project\fullcodesbeforegemini21-08(gemini).txt"
+"D:\PROJECT\CTI\aFull_project\aFull_project\gemini_api_key.txt"
+"D:\PROJECT\CTI\aFull_project\aFull_project\history.json"
+"D:\PROJECT\CTI\aFull_project\aFull_project\promt.txt"
+"D:\PROJECT\CTI\aFull_project\aFull_project\requirements.txt"
+"D:\PROJECT\CTI\aFull_project\cti-url-scanner-extension\popup.js"
+"D:\PROJECT\CTI\aFull_project\cti-url-scanner-extension\content_scanner.js"
+"D:\PROJECT\CTI\aFull_project\cti-url-scanner-extension\icon48.png"
+"D:\PROJECT\CTI\aFull_project\cti-url-scanner-extension\icon128.png"
+"D:\PROJECT\CTI\aFull_project\cti-url-scanner-extension\manifest.json"
+"D:\PROJECT\CTI\aFull_project\cti-url-scanner-extension\popup.html"
+
+
+content_scanner.js
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === "scan_links") {
+        scanPage(request.token);
+    }
+});
+
+async function scanPage(token) {
+    console.log("CTI Scanner: Received scan command. Searching for email content...");
+
+    const selectors = ['.a3s.aiL', '.ii.gt', '.WordSection1', 'div[aria-label="Message body"]'];
+    let emailBody = null;
+    for (const selector of selectors) {
+        emailBody = document.querySelector(selector);
+        if (emailBody) break;
+    }
+    
+    if (!emailBody) {
+        alert("CTI Scanner Error: Could not automatically find the email content on this page.");
+        chrome.runtime.sendMessage({ status: 'error', message: 'Could not find email body.' });
+        return;
+    }
+
+    // --- NEW: Extract the text content of the email ---
+    const emailText = emailBody.innerText;
+
+    // Find all links within the same email body
+    const linkElements = emailBody.querySelectorAll('a[href]');
+    const urlsToScan = Array.from(linkElements).map(link => link.href);
+
+    // Remove old icons before starting a new scan
+    document.querySelectorAll('.cti-scan-icon').forEach(icon => icon.remove());
+    
+    // --- NEW: Create the combined payload ---
+    const payload = {
+        email_text: emailText,
+        urls: urlsToScan
+    };
+
+    try {
+        // --- NEW: Call the new, combined API endpoint ---
+        const response = await fetch('http://127.0.0.1:5000/ext/analyze_email_content', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` 
+            },
+            body: JSON.stringify(payload) // Send the combined payload
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || `Server error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        let maliciousUrlCount = 0;
+
+        // --- NEW: Show an alert with the email verdict ---
+        if (data.email_verdict && data.email_verdict !== 'Not Scanned') {
+            alert(`CTI Email Scan Result: This email is classified as "${data.email_verdict}".`);
+        }
+        
+        // Process the URL results and place icons (this part is the same)
+        if (data.url_results) {
+            linkElements.forEach(link => {
+                const result = data.url_results.find(r => r.url === link.href);
+                if (result) {
+                    const icon = document.createElement('span');
+                    icon.className = 'cti-scan-icon';
+                    icon.style.marginLeft = '5px';
+                    if (result.verdict === 'Malicious') {
+                        icon.textContent = '🚨';
+                        icon.title = `MALICIOUS! Score: ${result.risk_score}%`;
+                        maliciousUrlCount++;
+                    } else {
+                        icon.textContent = '✅';
+                        icon.title = 'Safe.';
+                    }
+                    link.parentNode.insertBefore(icon, link.nextSibling);
+                }
+            });
+        }
+        
+        // Send a more detailed "complete" message back to the popup
+        chrome.runtime.sendMessage({ 
+            status: 'complete', 
+            email_verdict: data.email_verdict,
+            malicious_url_count: maliciousUrlCount 
+        });
+
+    } catch (error) {
+        alert(`CTI Scanner Error: ${error.message}`);
+        chrome.runtime.sendMessage({ status: 'error', message: error.message });
+    }
+}
+
+popup.html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CTI URL Scanner</title>
+    <style>
+        body { width: 250px; font-family: sans-serif; padding: 10px; }
+        h3 { text-align: center; margin-top: 0; }
+        .input-field { width: 100%; box-sizing: border-box; margin-bottom: 10px; padding: 8px; }
+        button { width: 100%; padding: 10px; border: none; border-radius: 5px; cursor: pointer; color: white; background-color: #007bff; }
+        #scanBtn { margin-top: 10px; }
+        #loginBtn { background-color: #28a745; }
+        #logoutBtn { background-color: #6c757d; margin-top: 5px; }
+        #status { margin-top: 10px; font-size: 12px; font-weight: bold; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <h3>CTI URL Scanner</h3>
+
+    <!-- Login Form View -->
+    <div id="login-view">
+        <input type="text" id="username" class="input-field" placeholder="Dashboard Username">
+        <input type="password" id="password" class="input-field" placeholder="Dashboard Password">
+        <button id="loginBtn">Login & Save</button>
+    </div>
+
+    <!-- Main View (shown after login) -->
+    <div id="main-view" class="hidden">
+        <p>Logged in as: <strong id="loggedInUser"></strong></p>
+        <button id="scanBtn">Scan Email Links</button>
+        <button id="logoutBtn">Logout</button>
+    </div>
+
+    <p id="status"></p>
+    <script src="popup.js"></script>
+</body>
+</html>
+
+
+popup.js
+// Get all the UI elements
+const loginView = document.getElementById('login-view');
+const mainView = document.getElementById('main-view');
+const status = document.getElementById('status');
+const loginBtn = document.getElementById('loginBtn');
+const scanBtn = document.getElementById('scanBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+const loggedInUser = document.getElementById('loggedInUser');
+
+// --- THIS IS THE ROBUST STORAGE API ---
+// It checks for 'browser' (standard) first, then falls back to 'chrome'.
+const storage = (typeof browser !== "undefined") ? browser.storage : chrome.storage;
+
+// --- STATE MANAGEMENT ---
+
+function showLoginView() {
+    loginView.classList.remove('hidden');
+    mainView.classList.add('hidden');
+    status.textContent = 'Please login with your dashboard credentials.';
+}
+
+function showMainView(username) {
+    loginView.classList.add('hidden');
+    mainView.classList.remove('hidden');
+    loggedInUser.textContent = username;
+    status.textContent = '';
+}
+
+// --- EVENT HANDLERS ---
+
+loginBtn.addEventListener('click', async () => {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    if (!username || !password) {
+        status.textContent = "Username and password are required.";
+        return;
+    }
+    status.textContent = "Logging in...";
+
+    try {
+        const response = await fetch('http://127.0.0.1:5000/ext/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error);
+
+        // Login successful, save token and username using the robust API
+        storage.sync.set({ jwtToken: data.token, username: username }, () => {
+            if (chrome.runtime.lastError) {
+                console.error("Error saving to storage:", chrome.runtime.lastError);
+                status.textContent = "Error: Could not save login session.";
+                return;
+            }
+            showMainView(username);
+        });
+
+    } catch (error) {
+        status.textContent = `Login failed: ${error.message}`;
+    }
+});
+
+logoutBtn.addEventListener('click', () => {
+    // Clear saved data
+    storage.sync.remove(['jwtToken', 'username'], () => {
+        showLoginView();
+    });
+});
+
+scanBtn.addEventListener('click', () => {
+    status.textContent = 'Scanning...';
+    // Get the saved token
+    storage.sync.get(['jwtToken'], (result) => {
+        if (!result.jwtToken) {
+            status.textContent = "Authentication error. Please login again.";
+            showLoginView();
+            return;
+        }
+
+        // Get the active tab and inject the content scanner
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            chrome.scripting.executeScript({
+                target: { tabId: tabs[0].id },
+                files: ['content_scanner.js']
+            }).then(() => {
+                // After injecting, send the token to the content scanner
+                chrome.tabs.sendMessage(tabs[0].id, {
+                    action: "scan_links",
+                    token: result.jwtToken
+                });
+            });
+        });
+    });
+});
+
+
+// --- THIS IS THE UPGRADED PART ---
+// Listen for the new, more detailed "complete" message
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.status === 'complete') {
+        // Display a more informative summary
+        status.textContent = `Email: ${request.email_verdict} | URLs: ${request.malicious_url_count} threats found.`;
+    } else if (request.status === 'error') {
+        status.textContent = `Error: ${request.message}`;
+    }
+});
+
+// --- INITIALIZATION ---
+
+// When the popup opens, check if we are already logged in
+document.addEventListener('DOMContentLoaded', () => {
+    storage.sync.get(['jwtToken', 'username'], (result) => {
+        if (result.jwtToken && result.username) {
+            showMainView(result.username);
+        } else {
+            showLoginView();
+        }
+    });
+});
+
+manifest.json
+{
+    "manifest_version": 3,
+    "name": "CTI URL Scanner",
+    "version": "1.0",
+    "description": "Scans all links within an email for phishing threats using the CTI backend.",
+    "permissions": [
+        "activeTab",
+        "scripting",
+        "storage" 
+    ],
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": "icon48.png"
+    },
+    "icons": {
+        "48": "icon48.png",
+        "128": "icon128.png"
+    }
+}

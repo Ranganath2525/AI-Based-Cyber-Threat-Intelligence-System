@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTI Project Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="dashboard-page-body">
+    <div class="container">
+        <header>
+            <h1>Cyber-Threat Intelligence Dashboard</h1>
+            <!-- Check if session username exists before displaying -->
+            {% if session.username %}
+                <p>Welcome, <strong>{{ session.username }}</strong>! A unified suite of AI-powered detection tools.</p>
+            {% endif %}
+            <nav>
+                {% if session.role == 'admin' %}
+                    <a href="{{ url_for('admin_panel') }}">Admin Panel</a> |
+                {% endif %}
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </nav>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-link" onclick="openTool(event, 'video')">Deepfake Video</button>
+            <button class="tab-link" onclick="openTool(event, 'audio')">Deepfake Audio</button>
+            <button class="tab-link" onclick="openTool(event, 'url')">Malicious URL</button>
+            <button class="tab-link" onclick="openTool(event, 'email')">Email Phishing</button>
+        </div>
+
+        <!-- Deepfake Video Tool -->
+        <div id="video" class="tool-content">
+            <h2>Deepfake Video Detector</h2>
+            <form id="video-form">
+                <p>Upload a video file (mp4, mov, etc.) to analyze its authenticity.</p>
+                <input type="file" name="file" accept="video/*" required>
+                <button type="submit">Analyze Video</button>
+            </form>
+        </div>
+
+        <!-- Deepfake Audio Tool -->
+        <div id="audio" class="tool-content">
+            <h2>Deepfake Audio Detector</h2>
+            <p>Upload an audio file (wav, mp3, etc.) to detect AI-generated voice.</p>
+            <form id="audio-form">
+                <input type="file" name="file" accept="audio/*" required>
+                <button type="submit">Analyze Audio</button>
+            </form>
+        </div>
+
+        <!-- Malicious URL Tool -->
+        <div id="url" class="tool-content">
+            <h2>Malicious URL Detector</h2>
+            <p>Enter a full URL (e.g., https://www.example.com) to scan for threats.</p>
+            <form id="url-form">
+                <input type="text" name="text" placeholder="Enter a URL to scan..." required>
+                <button type="submit">Analyze URL</button>
+            </form>
+        </div>
+
+        <!-- Email Phishing Tool -->
+        <div id="email" class="tool-content">
+            <h2>Email Phishing Detector</h2>
+            <p>Paste the full content of an email to check for phishing attempts.</p>
+            <form id="email-form">
+                <textarea name="text" rows="8" placeholder="Paste the full email content here..."></textarea>
+                <button type="submit">Analyze Email</button>
+            </form>
+        </div>
+
+        <!-- Universal Result Area -->
+        <div id="result-area" class="hidden">
+            <h3>Analysis Result</h3>
+            <div id="result-content"></div>
+        </div>
+
+    </div>
+    <!-- This line is essential and must be exactly as written -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

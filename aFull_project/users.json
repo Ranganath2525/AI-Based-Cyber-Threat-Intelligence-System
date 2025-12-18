@@ -1,0 +1,20 @@
+{
+    "admin": {
+        "password": "admin",
+        "email": "admin@example.com",
+        "role": "admin",
+        "active": true
+    },
+    "rahul": {
+        "password": "12345678",
+        "email": "test@gmail.com",
+        "role": "user",
+        "active": true
+    },
+    "jeevan": {
+        "password": "123",
+        "email": "h@gamil.com",
+        "role": "user",
+        "active": true
+    }
+}

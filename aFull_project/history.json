@@ -1,0 +1,3526 @@
+{
+    "admin": [
+        {
+            "timestamp": "2025-11-11 18:33:59",
+            "tool": "Deepfake Video",
+            "verdict": "Video: REAL, Audio: FAKE",
+            "details": "TalktwoReal.mp4"
+        },
+        {
+            "timestamp": "2025-11-11 18:26:24",
+            "tool": "URL Scan",
+            "verdict": "Malicious",
+            "details": "http://lightninglegal.org/paypal/..."
+        },
+        {
+            "timestamp": "2025-11-11 18:24:04",
+            "tool": "URL Scan",
+            "verdict": "Safe",
+            "details": "https://www.linkedin.com/in/archana-vr-4800131b2?u..."
+        },
+        {
+            "timestamp": "2025-11-08 20:42:36",
+            "tool": "Video Analysis",
+            "verdict": "Analysis Started",
+            "details": "Live Recorded Video"
+        },
+        {
+            "timestamp": "2025-11-08 20:41:39",
+            "tool": "Video Analysis",
+            "verdict": "Analysis Started",
+            "details": "Live Recorded Video"
+        },
+        {
+            "timestamp": "2025-11-08 20:34:29",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://moe_zjb6.api-03.moengage.com/v1/emailunsub..."
+        },
+        {
+            "timestamp": "2025-11-08 20:34:28",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://mail.google.com/mail/u/0/#m_75519557642586..."
+        },
+        {
+            "timestamp": "2025-11-08 20:34:28",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://moe_zjb6.api-03.moengage.com/v1/emailclick..."
+        },
+        {
+            "timestamp": "2025-11-08 20:34:27",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://moe_zjb6.api-03.moengage.com/v1/emailclick..."
+        },
+        {
+            "timestamp": "2025-11-08 20:34:27",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://moe_zjb6.api-03.moengage.com/v1/emailclick..."
+        },
+        {
+            "timestamp": "2025-11-08 20:34:26",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://moe_zjb6.api-03.moengage.com/v1/emailclick..."
+        },
+        {
+            "timestamp": "2025-11-08 20:34:26",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://moe_zjb6.api-03.moengage.com/v1/emailclick..."
+        },
+        {
+            "timestamp": "2025-11-08 20:34:25",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://moe_zjb6.api-03.moengage.com/v1/emailclick..."
+        },
+        {
+            "timestamp": "2025-11-08 20:34:24",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://moe_zjb6.api-03.moengage.com/v1/emailclick..."
+        },
+        {
+            "timestamp": "2025-11-08 20:34:24",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\n\n\nHi Ranganath,\n\nThe EY Global Immigration Intern..."
+        },
+        {
+            "timestamp": "2025-11-08 20:18:23",
+            "tool": "Deepfake Audio",
+            "verdict": "REAL",
+            "details": "A_002_0_B.wav (98.77%)"
+        },
+        {
+            "timestamp": "2025-11-08 20:07:44",
+            "tool": "Deepfake Audio",
+            "verdict": "REAL",
+            "details": "A_002_0_B.wav (98.77%)"
+        },
+        {
+            "timestamp": "2025-10-25 12:04:41",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "mailto:bhuvaneshkumarg315@gmail.com..."
+        },
+        {
+            "timestamp": "2025-10-25 12:04:40",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://c.gle/ANiao5psVuczsSrHKQt80_W9ULVQOKWDZCrJ..."
+        },
+        {
+            "timestamp": "2025-10-25 12:04:39",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://c.gle/ANiao5pv7jN8WI_hrJRKJR_HGSlBngbfLVWD..."
+        },
+        {
+            "timestamp": "2025-10-25 12:04:39",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://c.gle/ANiao5qY88NJ2UwSwIqbXcLqG2bgxXnHP7qp..."
+        },
+        {
+            "timestamp": "2025-10-25 12:04:38",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://c.gle/ANiao5psVuczsSrHKQt80_W9ULVQOKWDZCrJ..."
+        },
+        {
+            "timestamp": "2025-10-25 12:04:38",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://c.gle/ANiao5pv7jN8WI_hrJRKJR_HGSlBngbfLVWD..."
+        },
+        {
+            "timestamp": "2025-10-25 12:04:37",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://c.gle/ANiao5qY88NJ2UwSwIqbXcLqG2bgxXnHP7qp..."
+        },
+        {
+            "timestamp": "2025-10-25 12:04:37",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://c.gle/ANiao5pTBm6g14K2FqCjT8PhsmtFHlr1DnSb..."
+        },
+        {
+            "timestamp": "2025-10-25 12:04:36",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://c.gle/ANiao5rgWMTWjjVWSBPPVGUHjWfz8LV2RF-4..."
+        },
+        {
+            "timestamp": "2025-10-25 12:04:35",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://c.gle/ANiao5qi81xjqazI5w9oyXsbS4874Ap2Zt2o..."
+        },
+        {
+            "timestamp": "2025-10-25 12:04:35",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://c.gle/ANiao5pA_EDYJTqKI11uasIF2cF6fGmqhkt0..."
+        },
+        {
+            "timestamp": "2025-10-25 12:04:34",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://c.gle/ANiao5pUxBlPN-ML_8viR58EbIoJ2EyjZoRz..."
+        },
+        {
+            "timestamp": "2025-10-25 12:04:34",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://c.gle/ANiao5pGp2gRV-71hvlseGKNmuuWXwuuRr80..."
+        },
+        {
+            "timestamp": "2025-10-25 12:04:33",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://c.gle/ANiao5pXbCA3gXFcMWcgcccDy8Op2VuHif-u..."
+        },
+        {
+            "timestamp": "2025-10-25 12:04:33",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://c.gle/ANiao5rg8qHrnPTML3bLozI3OTQI-Pk5g3uO..."
+        },
+        {
+            "timestamp": "2025-10-25 12:04:32",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://c.gle/ANiao5pIflZj4jMEYY7veheEqD2i4OxRQ708..."
+        },
+        {
+            "timestamp": "2025-10-25 12:04:32",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://c.gle/ANiao5oeeDpOtVy7hJCrR1idpbIuovsdGA9o..."
+        },
+        {
+            "timestamp": "2025-10-25 12:04:31",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://c.gle/ANiao5rXgOlWpv29Y3W_OFymZg4ZtpCzUpyL..."
+        },
+        {
+            "timestamp": "2025-10-25 12:04:30",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://notifications.google.com/g/vib/ANiao5qio8I..."
+        },
+        {
+            "timestamp": "2025-10-25 12:04:30",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "Email not displaying correctly? View it online\n\n\u00a0\n..."
+        },
+        {
+            "timestamp": "2025-10-25 12:02:17",
+            "tool": "Video Analysis",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Live Recorded Video"
+        },
+        {
+            "timestamp": "2025-10-25 12:02:01",
+            "tool": "Video Analysis",
+            "verdict": "Analysis Started",
+            "details": "Live Recorded Video"
+        },
+        {
+            "timestamp": "2025-10-25 11:57:37",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Titanic_s_Happy_Ending_Video.mp4"
+        },
+        {
+            "timestamp": "2025-10-25 11:33:55",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/eh/yBNjEcFDGVRCC2yMQ..."
+        },
+        {
+            "timestamp": "2025-10-25 11:33:55",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/vLNJ33HljbP6kFPcpL..."
+        },
+        {
+            "timestamp": "2025-10-25 11:33:54",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/vb/ozoknLFBZDv0mP7SP..."
+        },
+        {
+            "timestamp": "2025-10-25 11:33:54",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/ZPYl0YS-gi6Uv_vik7..."
+        },
+        {
+            "timestamp": "2025-10-25 11:33:53",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/cYI_rgP-OM-5iN8L5k..."
+        },
+        {
+            "timestamp": "2025-10-25 11:33:53",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/HWaiplWKofiyIA1z9F..."
+        },
+        {
+            "timestamp": "2025-10-25 11:33:52",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/Y1fFQWNqOIMUC-HiSi..."
+        },
+        {
+            "timestamp": "2025-10-25 11:33:51",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/HanAYyp5gyx97y-3zi..."
+        },
+        {
+            "timestamp": "2025-10-25 11:33:51",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/iUr8p47SS4e2Zo_4L6..."
+        },
+        {
+            "timestamp": "2025-10-25 11:33:50",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/v48Co2H9KOqzkkaZ-D..."
+        },
+        {
+            "timestamp": "2025-10-25 11:33:50",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/i2dJpyxyary9U3lBWw..."
+        },
+        {
+            "timestamp": "2025-10-25 11:33:49",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/YigkLsxnoVgSklUJtG..."
+        },
+        {
+            "timestamp": "2025-10-25 11:33:49",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/UreK7e7iyB3UBvywBV..."
+        },
+        {
+            "timestamp": "2025-10-25 11:33:48",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/wERAb6Hq_Vlw8GCIkW..."
+        },
+        {
+            "timestamp": "2025-10-25 11:33:48",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/TEotdk-Hz-qT0MzrGk..."
+        },
+        {
+            "timestamp": "2025-10-25 11:33:47",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/w7Rn_etG4aDC4t7vha..."
+        },
+        {
+            "timestamp": "2025-10-25 11:33:47",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/G7JNnUCAiMgickGq2_..."
+        },
+        {
+            "timestamp": "2025-10-25 11:33:46",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/gPsXsbevIiZRnzTup1..."
+        },
+        {
+            "timestamp": "2025-10-25 11:33:46",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/NoS-b-KlBOBd97Leyr..."
+        },
+        {
+            "timestamp": "2025-10-25 11:33:46",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-10-25 11:31:21",
+            "tool": "Deepfake Audio",
+            "verdict": "FAKE",
+            "details": "fake_audio.wav (89.36%)"
+        },
+        {
+            "timestamp": "2025-10-25 11:26:22",
+            "tool": "Email Scan",
+            "verdict": "Not Phishing",
+            "details": "Conversation opened. 1 read me..."
+        },
+        {
+            "timestamp": "2025-10-25 11:21:30",
+            "tool": "Email Scan",
+            "verdict": "Not Phishing",
+            "details": "Conversation opened. 1 read me..."
+        },
+        {
+            "timestamp": "2025-10-25 10:30:30",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Titanic_s_Happy_Ending_Video.mp4"
+        },
+        {
+            "timestamp": "2025-10-24 20:55:43",
+            "tool": "Video Analysis",
+            "verdict": "Video: REAL, Audio: FAKE",
+            "details": "Live Recorded Video"
+        },
+        {
+            "timestamp": "2025-10-24 20:55:39",
+            "tool": "Video Analysis",
+            "verdict": "Analysis Started",
+            "details": "Live Recorded Video"
+        },
+        {
+            "timestamp": "2025-10-24 20:51:26",
+            "tool": "Video Analysis",
+            "verdict": "Video: REAL, Audio: FAKE",
+            "details": "Live Recorded Video"
+        },
+        {
+            "timestamp": "2025-10-24 20:51:21",
+            "tool": "Video Analysis",
+            "verdict": "Analysis Started",
+            "details": "Live Recorded Video"
+        },
+        {
+            "timestamp": "2025-10-24 20:51:05",
+            "tool": "Video Analysis",
+            "verdict": "Analysis Started",
+            "details": "Live Recorded Video"
+        },
+        {
+            "timestamp": "2025-10-24 20:49:43",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/eh/yBNjEcFDGVRCC2yMQ..."
+        },
+        {
+            "timestamp": "2025-10-24 20:49:42",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/vLNJ33HljbP6kFPcpL..."
+        },
+        {
+            "timestamp": "2025-10-24 20:49:42",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/vb/ozoknLFBZDv0mP7SP..."
+        },
+        {
+            "timestamp": "2025-10-24 20:49:41",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/ZPYl0YS-gi6Uv_vik7..."
+        },
+        {
+            "timestamp": "2025-10-24 20:49:41",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/cYI_rgP-OM-5iN8L5k..."
+        },
+        {
+            "timestamp": "2025-10-24 20:49:40",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/HWaiplWKofiyIA1z9F..."
+        },
+        {
+            "timestamp": "2025-10-24 20:49:40",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/Y1fFQWNqOIMUC-HiSi..."
+        },
+        {
+            "timestamp": "2025-10-24 20:49:39",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/HanAYyp5gyx97y-3zi..."
+        },
+        {
+            "timestamp": "2025-10-24 20:49:39",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/iUr8p47SS4e2Zo_4L6..."
+        },
+        {
+            "timestamp": "2025-10-24 20:49:38",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/v48Co2H9KOqzkkaZ-D..."
+        },
+        {
+            "timestamp": "2025-10-24 20:49:38",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/i2dJpyxyary9U3lBWw..."
+        },
+        {
+            "timestamp": "2025-10-24 20:49:37",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/YigkLsxnoVgSklUJtG..."
+        },
+        {
+            "timestamp": "2025-10-24 20:49:37",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/UreK7e7iyB3UBvywBV..."
+        },
+        {
+            "timestamp": "2025-10-24 20:49:36",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/wERAb6Hq_Vlw8GCIkW..."
+        },
+        {
+            "timestamp": "2025-10-24 20:49:36",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/TEotdk-Hz-qT0MzrGk..."
+        },
+        {
+            "timestamp": "2025-10-24 20:49:35",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/w7Rn_etG4aDC4t7vha..."
+        },
+        {
+            "timestamp": "2025-10-24 20:49:34",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/G7JNnUCAiMgickGq2_..."
+        },
+        {
+            "timestamp": "2025-10-24 20:49:34",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/gPsXsbevIiZRnzTup1..."
+        },
+        {
+            "timestamp": "2025-10-24 20:49:33",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/NoS-b-KlBOBd97Leyr..."
+        },
+        {
+            "timestamp": "2025-10-24 20:49:33",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-10-24 20:37:16",
+            "tool": "Email Scan",
+            "verdict": "Not Phishing",
+            "details": "Conversation opened. 1 read me..."
+        },
+        {
+            "timestamp": "2025-10-24 20:22:10",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Titanic_s_Happy_Ending_Video.mp4"
+        },
+        {
+            "timestamp": "2025-10-24 20:14:55",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Titanic_s_Happy_Ending_Video.mp4"
+        },
+        {
+            "timestamp": "2025-10-24 20:03:54",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Titanic_s_Happy_Ending_Video.mp4"
+        },
+        {
+            "timestamp": "2025-10-24 19:44:25",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Titanic_s_Happy_Ending_Video.mp4"
+        },
+        {
+            "timestamp": "2025-09-12 14:48:06",
+            "tool": "Video Analysis",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Live Recorded Video"
+        },
+        {
+            "timestamp": "2025-09-12 14:47:58",
+            "tool": "Video Analysis",
+            "verdict": "Analysis Started",
+            "details": "Live Recorded Video"
+        },
+        {
+            "timestamp": "2025-09-12 14:46:49",
+            "tool": "Video Analysis",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Live Recorded Video"
+        },
+        {
+            "timestamp": "2025-09-12 14:46:38",
+            "tool": "Video Analysis",
+            "verdict": "Analysis Started",
+            "details": "Live Recorded Video"
+        },
+        {
+            "timestamp": "2025-09-12 14:45:38",
+            "tool": "Video Analysis",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "https://www.youtube.com/watch?v=oxXpB9pSETo"
+        },
+        {
+            "timestamp": "2025-09-12 14:45:16",
+            "tool": "Video Analysis",
+            "verdict": "Analysis Started",
+            "details": "https://www.youtube.com/watch?v=oxXpB9pSETo"
+        },
+        {
+            "timestamp": "2025-09-12 14:36:11",
+            "tool": "URL Scan",
+            "verdict": "Malicious",
+            "details": "http://bank-secure-verification.xyz..."
+        },
+        {
+            "timestamp": "2025-09-12 14:35:37",
+            "tool": "Email Scan",
+            "verdict": "Phishing",
+            "details": "Dear Customer,\n\nWe noticed unu..."
+        },
+        {
+            "timestamp": "2025-09-12 14:35:03",
+            "tool": "URL Scan",
+            "verdict": "Safe",
+            "details": "https://google.com..."
+        },
+        {
+            "timestamp": "2025-09-12 14:34:51",
+            "tool": "URL Scan",
+            "verdict": "Safe",
+            "details": "https://www.linkedin.com/in/dr-soumya-k-n-a7b14921..."
+        },
+        {
+            "timestamp": "2025-09-12 14:34:19",
+            "tool": "Email Scan",
+            "verdict": "Not Phishing",
+            "details": "Hi,\n\nYou're almost done! Just ..."
+        },
+        {
+            "timestamp": "2025-09-12 14:34:02",
+            "tool": "URL Scan",
+            "verdict": "Safe",
+            "details": "https://www.linkedin.com/in/dr-soumya-k-n-a7b14921..."
+        },
+        {
+            "timestamp": "2025-09-12 14:25:13",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/eh/3jD_6zR8nLXDoFlPn..."
+        },
+        {
+            "timestamp": "2025-09-12 14:25:13",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/SLYAVZ5LqnhJPYcSpJ..."
+        },
+        {
+            "timestamp": "2025-09-12 14:25:12",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/vb/-shSO2w5CphNY-Zkp..."
+        },
+        {
+            "timestamp": "2025-09-12 14:25:12",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/2LHZcubXulR1b8z9yY..."
+        },
+        {
+            "timestamp": "2025-09-12 14:25:11",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/Zzs5_0PTT6QfK_Ley5..."
+        },
+        {
+            "timestamp": "2025-09-12 14:25:11",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/WkPGrGpg4vnybXAMg_..."
+        },
+        {
+            "timestamp": "2025-09-12 14:25:10",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/En5eRRJ9tCX9WnICuC..."
+        },
+        {
+            "timestamp": "2025-09-12 14:25:10",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/FWrUINc3RZ7Hb35VMF..."
+        },
+        {
+            "timestamp": "2025-09-12 14:25:09",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/-t0WS0_YaWN0sWebAV..."
+        },
+        {
+            "timestamp": "2025-09-12 14:25:09",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/_IROvbSOIDpS8rbTF5..."
+        },
+        {
+            "timestamp": "2025-09-12 14:25:08",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/Oe3dC4HziJAC4q3C_X..."
+        },
+        {
+            "timestamp": "2025-09-12 14:25:08",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/5jb1FyEI1lfjE9HYRB..."
+        },
+        {
+            "timestamp": "2025-09-12 14:25:07",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/ffoUBPk7RdnIGXakyZ..."
+        },
+        {
+            "timestamp": "2025-09-12 14:25:07",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/uGV2psTobm-Y92ftet..."
+        },
+        {
+            "timestamp": "2025-09-12 14:25:06",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/YkvKZmoUlM2HNe9j0Z..."
+        },
+        {
+            "timestamp": "2025-09-12 14:25:05",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/tdJSKvLL4ArlU9kNtc..."
+        },
+        {
+            "timestamp": "2025-09-12 14:25:05",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/Rw4nadlgOibYbyJWlZ..."
+        },
+        {
+            "timestamp": "2025-09-12 14:25:04",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/VFdbwaF8ED_8MEN_1C..."
+        },
+        {
+            "timestamp": "2025-09-12 14:25:04",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-12 14:14:05",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: REAL",
+            "details": "fake1.mp4"
+        },
+        {
+            "timestamp": "2025-09-12 14:07:29",
+            "tool": "URL Scan",
+            "verdict": "Safe",
+            "details": "https://www.linkedin.com/in/bhuvanesh-kumar-g-5b6a..."
+        },
+        {
+            "timestamp": "2025-09-12 14:05:13",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: REAL",
+            "details": "fake1.mp4"
+        },
+        {
+            "timestamp": "2025-09-12 14:03:38",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://accounts.google.com/AccountChooser?Email=b..."
+        },
+        {
+            "timestamp": "2025-09-12 14:03:38",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "mailto:bhuvanesh0305@gmail.com..."
+        },
+        {
+            "timestamp": "2025-09-12 14:03:37",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Phishing",
+            "details": "\n\n\t\n\nVerify bhuvanesh0305@gmail.com as your recove..."
+        },
+        {
+            "timestamp": "2025-09-12 13:52:22",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/eh/yBNjEcFDGVRCC2yMQ..."
+        },
+        {
+            "timestamp": "2025-09-12 13:52:22",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/vLNJ33HljbP6kFPcpL..."
+        },
+        {
+            "timestamp": "2025-09-12 13:52:21",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/vb/ozoknLFBZDv0mP7SP..."
+        },
+        {
+            "timestamp": "2025-09-12 13:52:21",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/ZPYl0YS-gi6Uv_vik7..."
+        },
+        {
+            "timestamp": "2025-09-12 13:52:20",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/cYI_rgP-OM-5iN8L5k..."
+        },
+        {
+            "timestamp": "2025-09-12 13:52:20",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/HWaiplWKofiyIA1z9F..."
+        },
+        {
+            "timestamp": "2025-09-12 13:52:19",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/Y1fFQWNqOIMUC-HiSi..."
+        },
+        {
+            "timestamp": "2025-09-12 13:52:19",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/HanAYyp5gyx97y-3zi..."
+        },
+        {
+            "timestamp": "2025-09-12 13:52:18",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/iUr8p47SS4e2Zo_4L6..."
+        },
+        {
+            "timestamp": "2025-09-12 13:52:18",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/v48Co2H9KOqzkkaZ-D..."
+        },
+        {
+            "timestamp": "2025-09-12 13:52:17",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/i2dJpyxyary9U3lBWw..."
+        },
+        {
+            "timestamp": "2025-09-12 13:52:17",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/YigkLsxnoVgSklUJtG..."
+        },
+        {
+            "timestamp": "2025-09-12 13:52:16",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/UreK7e7iyB3UBvywBV..."
+        },
+        {
+            "timestamp": "2025-09-12 13:52:15",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/wERAb6Hq_Vlw8GCIkW..."
+        },
+        {
+            "timestamp": "2025-09-12 13:52:15",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/TEotdk-Hz-qT0MzrGk..."
+        },
+        {
+            "timestamp": "2025-09-12 13:52:14",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/w7Rn_etG4aDC4t7vha..."
+        },
+        {
+            "timestamp": "2025-09-12 13:52:14",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/G7JNnUCAiMgickGq2_..."
+        },
+        {
+            "timestamp": "2025-09-12 13:52:13",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/gPsXsbevIiZRnzTup1..."
+        },
+        {
+            "timestamp": "2025-09-12 13:52:13",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://click.grammarly.com/s/c/NoS-b-KlBOBd97Leyr..."
+        },
+        {
+            "timestamp": "2025-09-12 13:52:13",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-11 16:44:20",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://accounts.google.com/AccountChooser?Email=b..."
+        },
+        {
+            "timestamp": "2025-09-11 16:44:20",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "mailto:bhuvanesh0305@gmail.com..."
+        },
+        {
+            "timestamp": "2025-09-11 16:44:20",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Phishing",
+            "details": "\n\n\t\n\nVerify bhuvanesh0305@gmail.com as your recove..."
+        },
+        {
+            "timestamp": "2025-09-11 16:34:14",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://accounts.google.com/AccountChooser?Email=b..."
+        },
+        {
+            "timestamp": "2025-09-11 16:34:14",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "mailto:bhuvanesh0305@gmail.com..."
+        },
+        {
+            "timestamp": "2025-09-11 16:34:14",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Phishing",
+            "details": "\n\n\t\n\nVerify bhuvanesh0305@gmail.com as your recove..."
+        },
+        {
+            "timestamp": "2025-09-11 16:24:17",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "fake_Titanic_s_Happy_Ending_Video.mp4"
+        },
+        {
+            "timestamp": "2025-09-11 16:23:43",
+            "tool": "Video Analysis",
+            "verdict": "Video: REAL, Audio: FAKE",
+            "details": "https://www.youtube.com/watch?v=cF1Na4AIecM&list=RDcF1Na4AIecM&start_radio=1"
+        },
+        {
+            "timestamp": "2025-09-11 16:23:09",
+            "tool": "Video Analysis",
+            "verdict": "Analysis Started",
+            "details": "https://www.youtube.com/watch?v=cF1Na4AIecM&list=RDcF1Na4AIecM&start_radio=1"
+        },
+        {
+            "timestamp": "2025-09-11 16:18:25",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://mail.google.com/mail/u/0/#m_15081911120934..."
+        },
+        {
+            "timestamp": "2025-09-11 16:18:24",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://mail.google.com/mail/u/0/#m_15081911120934..."
+        },
+        {
+            "timestamp": "2025-09-11 16:18:24",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://support.google.com/android/?p=find_offline..."
+        },
+        {
+            "timestamp": "2025-09-11 16:18:23",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "mailto:bhuvaneshkumarg315@gmail.com..."
+        },
+        {
+            "timestamp": "2025-09-11 16:18:23",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://www.google.com/android/find/settings/fmdn..."
+        },
+        {
+            "timestamp": "2025-09-11 16:18:22",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://support.google.com/android/answer/9079129..."
+        },
+        {
+            "timestamp": "2025-09-11 16:18:22",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://support.google.com/android/?p=crowdsourcin..."
+        },
+        {
+            "timestamp": "2025-09-11 16:18:22",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Phishing",
+            "details": "\t\n\n\n\u00a0\nFind Hub network\n\nDownload\n\nYou can use Find..."
+        },
+        {
+            "timestamp": "2025-09-11 16:15:29",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://mail.google.com/mail/u/0/#m_15081911120934..."
+        },
+        {
+            "timestamp": "2025-09-11 16:15:29",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://mail.google.com/mail/u/0/#m_15081911120934..."
+        },
+        {
+            "timestamp": "2025-09-11 16:15:28",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://support.google.com/android/?p=find_offline..."
+        },
+        {
+            "timestamp": "2025-09-11 16:15:28",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "mailto:bhuvaneshkumarg315@gmail.com..."
+        },
+        {
+            "timestamp": "2025-09-11 16:15:27",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://www.google.com/android/find/settings/fmdn..."
+        },
+        {
+            "timestamp": "2025-09-11 16:15:27",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://support.google.com/android/answer/9079129..."
+        },
+        {
+            "timestamp": "2025-09-11 16:15:26",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://support.google.com/android/?p=crowdsourcin..."
+        },
+        {
+            "timestamp": "2025-09-11 16:15:26",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Phishing",
+            "details": "\t\n\n\n\u00a0\nFind Hub network\n\nDownload\n\nYou can use Find..."
+        },
+        {
+            "timestamp": "2025-09-11 16:06:21",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://mail.google.com/mail/u/0/#m_-5273904213192..."
+        },
+        {
+            "timestamp": "2025-09-11 16:06:20",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://mail.google.com/mail/u/0/#m_-5273904213192..."
+        },
+        {
+            "timestamp": "2025-09-11 16:06:20",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://support.google.com/android/?p=find_offline..."
+        },
+        {
+            "timestamp": "2025-09-11 16:06:19",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "mailto:bhuvaneshkumarg315@gmail.com..."
+        },
+        {
+            "timestamp": "2025-09-11 16:06:19",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://www.google.com/android/find/settings/fmdn..."
+        },
+        {
+            "timestamp": "2025-09-11 16:06:18",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://support.google.com/android/answer/9079129..."
+        },
+        {
+            "timestamp": "2025-09-11 16:06:17",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://support.google.com/android/?p=crowdsourcin..."
+        },
+        {
+            "timestamp": "2025-09-11 16:06:17",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Phishing",
+            "details": "\t\n\n\n\u00a0\nFind Hub network\n\nDownload\n\nYou can use Find..."
+        },
+        {
+            "timestamp": "2025-09-11 16:01:21",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://mail.google.com/mail/u/0/#m_-6807387013172..."
+        },
+        {
+            "timestamp": "2025-09-11 16:01:20",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://mail.google.com/mail/u/0/#m_-6807387013172..."
+        },
+        {
+            "timestamp": "2025-09-11 16:01:20",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://support.google.com/android/?p=find_offline..."
+        },
+        {
+            "timestamp": "2025-09-11 16:01:19",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "mailto:bhuvaneshkumarg315@gmail.com..."
+        },
+        {
+            "timestamp": "2025-09-11 16:01:19",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://www.google.com/android/find/settings/fmdn..."
+        },
+        {
+            "timestamp": "2025-09-11 16:01:18",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://support.google.com/android/answer/9079129..."
+        },
+        {
+            "timestamp": "2025-09-11 16:01:18",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://support.google.com/android/?p=crowdsourcin..."
+        },
+        {
+            "timestamp": "2025-09-11 16:01:18",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Phishing",
+            "details": "\t\n\n\n\u00a0\nFind Hub network\n\nDownload\n\nYou can use Find..."
+        },
+        {
+            "timestamp": "2025-09-11 15:58:01",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://mail.google.com/mail/u/0/#m_-6807387013172..."
+        },
+        {
+            "timestamp": "2025-09-11 15:58:00",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://mail.google.com/mail/u/0/#m_-6807387013172..."
+        },
+        {
+            "timestamp": "2025-09-11 15:57:59",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://support.google.com/android/?p=find_offline..."
+        },
+        {
+            "timestamp": "2025-09-11 15:57:59",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "mailto:bhuvaneshkumarg315@gmail.com..."
+        },
+        {
+            "timestamp": "2025-09-11 15:57:58",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://www.google.com/android/find/settings/fmdn..."
+        },
+        {
+            "timestamp": "2025-09-11 15:57:58",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://support.google.com/android/answer/9079129..."
+        },
+        {
+            "timestamp": "2025-09-11 15:57:57",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://support.google.com/android/?p=crowdsourcin..."
+        },
+        {
+            "timestamp": "2025-09-11 15:57:57",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Phishing",
+            "details": "\t\n\n\n\u00a0\nFind Hub network\n\nDownload\n\nYou can use Find..."
+        },
+        {
+            "timestamp": "2025-09-11 15:42:41",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://mail.google.com/mail/u/0/#m_-6113159159178..."
+        },
+        {
+            "timestamp": "2025-09-11 15:42:41",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://mail.google.com/mail/u/0/#m_-6113159159178..."
+        },
+        {
+            "timestamp": "2025-09-11 15:42:40",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://support.google.com/android/?p=find_offline..."
+        },
+        {
+            "timestamp": "2025-09-11 15:42:40",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "mailto:bhuvaneshkumarg315@gmail.com..."
+        },
+        {
+            "timestamp": "2025-09-11 15:42:39",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://www.google.com/android/find/settings/fmdn..."
+        },
+        {
+            "timestamp": "2025-09-11 15:42:39",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://support.google.com/android/answer/9079129..."
+        },
+        {
+            "timestamp": "2025-09-11 15:42:38",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Safe",
+            "details": "https://support.google.com/android/?p=crowdsourcin..."
+        },
+        {
+            "timestamp": "2025-09-11 15:42:38",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Phishing",
+            "details": "\t\n\n\n\u00a0\nFind Hub network\n\nDownload\n\nYou can use Find..."
+        },
+        {
+            "timestamp": "2025-09-10 21:34:14",
+            "tool": "Email Scan",
+            "verdict": "Not Phishing",
+            "details": "Hi,\n\nYou're almost done! Just ..."
+        },
+        {
+            "timestamp": "2025-09-10 21:18:52",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: REAL",
+            "details": "fake1.mp4"
+        },
+        {
+            "timestamp": "2025-09-10 21:17:39",
+            "tool": "Deepfake Video",
+            "verdict": "Video: REAL, Audio: FAKE",
+            "details": "TalktwoReal.mp4"
+        },
+        {
+            "timestamp": "2025-09-10 21:16:30",
+            "tool": "Deepfake Video",
+            "verdict": "Video: REAL, Audio: FAKE",
+            "details": "real1.mp4"
+        },
+        {
+            "timestamp": "2025-09-10 21:14:33",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "fake_Titanic_s_Happy_Ending_Video.mp4"
+        },
+        {
+            "timestamp": "2025-09-10 21:12:24",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Google_Veo_3_Street_Interview.mp4"
+        },
+        {
+            "timestamp": "2025-09-10 21:08:31",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Google_Veo_3_Street_Interview.mp4"
+        },
+        {
+            "timestamp": "2025-09-10 21:02:10",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Google_Veo_3_Street_Interview.mp4"
+        },
+        {
+            "timestamp": "2025-09-10 21:00:09",
+            "tool": "Video Analysis",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "https://www.youtube.com/watch?v=hqlHrK5SEuc"
+        },
+        {
+            "timestamp": "2025-09-10 20:59:29",
+            "tool": "Video Analysis",
+            "verdict": "Analysis Started",
+            "details": "https://www.youtube.com/watch?v=hqlHrK5SEuc"
+        },
+        {
+            "timestamp": "2025-09-10 20:58:27",
+            "tool": "Video Analysis",
+            "verdict": "Analysis Started",
+            "details": "https://www.youtube.com/watch?v=oxXpB9pSETo"
+        },
+        {
+            "timestamp": "2025-09-10 20:57:18",
+            "tool": "Video Analysis",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "https://www.youtube.com/watch?v=oxXpB9pSETo"
+        },
+        {
+            "timestamp": "2025-09-10 20:56:16",
+            "tool": "Video Analysis",
+            "verdict": "Analysis Started",
+            "details": "https://www.youtube.com/watch?v=oxXpB9pSETo"
+        },
+        {
+            "timestamp": "2025-09-10 20:55:38",
+            "tool": "URL Scan",
+            "verdict": "Malicious",
+            "details": "http://macautocare.in/css/..."
+        },
+        {
+            "timestamp": "2025-09-10 20:54:59",
+            "tool": "URL Scan",
+            "verdict": "Malicious",
+            "details": "http://lightninglegal.org/paypal/..."
+        },
+        {
+            "timestamp": "2025-09-10 20:53:44",
+            "tool": "URL Scan",
+            "verdict": "Safe",
+            "details": "https://www.apple.com..."
+        },
+        {
+            "timestamp": "2025-09-10 20:53:38",
+            "tool": "URL Scan",
+            "verdict": "Safe",
+            "details": "https://www.google.com..."
+        },
+        {
+            "timestamp": "2025-09-10 20:53:16",
+            "tool": "URL Scan",
+            "verdict": "Malicious",
+            "details": "https://www.ask.com..."
+        },
+        {
+            "timestamp": "2025-09-10 20:52:59",
+            "tool": "URL Scan",
+            "verdict": "Safe",
+            "details": "https://www.reddit.com..."
+        },
+        {
+            "timestamp": "2025-09-10 20:49:23",
+            "tool": "URL Scan",
+            "verdict": "Malicious",
+            "details": "https://www.reddit.com..."
+        },
+        {
+            "timestamp": "2025-09-10 20:49:09",
+            "tool": "URL Scan",
+            "verdict": "Safe",
+            "details": "https://www.google.com..."
+        },
+        {
+            "timestamp": "2025-09-10 20:42:10",
+            "tool": "URL Scan",
+            "verdict": "Malicious",
+            "details": "https://www.google.com..."
+        },
+        {
+            "timestamp": "2025-09-10 20:40:34",
+            "tool": "URL Scan",
+            "verdict": "Malicious",
+            "details": "https://www.kaggle.com/datasets/sid321axn/maliciou..."
+        },
+        {
+            "timestamp": "2025-09-10 20:34:18",
+            "tool": "Video Analysis",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "https://www.youtube.com/watch?v=gcZwE5cM4xs"
+        },
+        {
+            "timestamp": "2025-09-10 20:33:21",
+            "tool": "Video Analysis",
+            "verdict": "Analysis Started",
+            "details": "https://www.youtube.com/watch?v=gcZwE5cM4xs"
+        },
+        {
+            "timestamp": "2025-09-10 20:25:16",
+            "tool": "Video Analysis",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "https://www.youtube.com/watch?v=gcZwE5cM4xs"
+        },
+        {
+            "timestamp": "2025-09-10 20:24:20",
+            "tool": "Video Analysis",
+            "verdict": "Analysis Started",
+            "details": "https://www.youtube.com/watch?v=gcZwE5cM4xs"
+        },
+        {
+            "timestamp": "2025-09-10 20:19:53",
+            "tool": "Video Analysis",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "https://www.youtube.com/watch?v=gcZwE5cM4xs"
+        },
+        {
+            "timestamp": "2025-09-10 20:18:41",
+            "tool": "Video Analysis",
+            "verdict": "Analysis Started",
+            "details": "https://www.youtube.com/watch?v=gcZwE5cM4xs"
+        },
+        {
+            "timestamp": "2025-09-10 19:56:32",
+            "tool": "Deepfake Video",
+            "verdict": "Video: REAL, Audio: FAKE",
+            "details": "Deepfake_Tom_Cruise.mp4"
+        },
+        {
+            "timestamp": "2025-09-10 19:55:39",
+            "tool": "Video Analysis",
+            "verdict": "Analysis Started",
+            "details": "https://www.youtube.com/shorts/C0g8t73KTcU"
+        },
+        {
+            "timestamp": "2025-09-10 19:54:03",
+            "tool": "Video Analysis",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "https://www.youtube.com/watch?v=oxXpB9pSETo"
+        },
+        {
+            "timestamp": "2025-09-10 19:53:22",
+            "tool": "Video Analysis",
+            "verdict": "Analysis Started",
+            "details": "https://www.youtube.com/watch?v=oxXpB9pSETo"
+        },
+        {
+            "timestamp": "2025-09-10 19:52:29",
+            "tool": "Video Analysis",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "https://www.youtube.com/watch?v=8ARn14XIlhE"
+        },
+        {
+            "timestamp": "2025-09-10 19:51:46",
+            "tool": "Video Analysis",
+            "verdict": "Analysis Started",
+            "details": "https://www.youtube.com/watch?v=8ARn14XIlhE"
+        },
+        {
+            "timestamp": "2025-09-10 19:50:10",
+            "tool": "Live Deepfake Capture",
+            "verdict": "Video: FAKE, Audio: REAL",
+            "details": "live_capture_d2d3dbf9-2c6a-4b72-97ac-ee4d5996ce35.webm"
+        },
+        {
+            "timestamp": "2025-09-10 19:49:05",
+            "tool": "Live Deepfake Capture",
+            "verdict": "Analysis Started",
+            "details": "live_capture_d2d3dbf9-2c6a-4b72-97ac-ee4d5996ce35.webm"
+        },
+        {
+            "timestamp": "2025-09-10 19:47:52",
+            "tool": "Video Analysis",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "https://www.youtube.com/watch?v=VCPGMjCW0is"
+        },
+        {
+            "timestamp": "2025-09-10 19:47:30",
+            "tool": "Video Analysis",
+            "verdict": "Analysis Started",
+            "details": "https://www.youtube.com/watch?v=VCPGMjCW0is"
+        },
+        {
+            "timestamp": "2025-09-10 19:42:39",
+            "tool": "Deepfake Video",
+            "verdict": "Video: REAL, Audio: FAKE",
+            "details": "gillReal.mp4"
+        },
+        {
+            "timestamp": "2025-09-10 19:41:22",
+            "tool": "Deepfake Video",
+            "verdict": "Video: REAL, Audio: FAKE",
+            "details": "dkReal.mp4"
+        },
+        {
+            "timestamp": "2025-09-10 19:39:56",
+            "tool": "Deepfake Video",
+            "verdict": "Video: REAL, Audio: FAKE",
+            "details": "realTrump.mp4"
+        },
+        {
+            "timestamp": "2025-09-10 19:38:46",
+            "tool": "Deepfake Video",
+            "verdict": "Video: REAL, Audio: FAKE",
+            "details": "real1.mp4"
+        },
+        {
+            "timestamp": "2025-09-10 19:34:36",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Titanic_s_Happy_Ending_Video.mp4"
+        },
+        {
+            "timestamp": "2025-09-06 15:43:49",
+            "tool": "Live Deepfake Capture",
+            "verdict": "Video: REAL, Audio: FAKE",
+            "details": "live_capture_9adaf5c9-4cf8-49ff-8f79-2e38463fa68b.webm"
+        },
+        {
+            "timestamp": "2025-09-06 15:42:52",
+            "tool": "Live Deepfake Capture",
+            "verdict": "Analysis Started",
+            "details": "live_capture_9adaf5c9-4cf8-49ff-8f79-2e38463fa68b.webm"
+        },
+        {
+            "timestamp": "2025-09-06 15:26:14",
+            "tool": "Live Deepfake Capture",
+            "verdict": "Video: REAL, Audio: FAKE",
+            "details": "live_capture_ac250927-276d-4aca-aad7-cb39abea9e13.webm"
+        },
+        {
+            "timestamp": "2025-09-06 15:24:56",
+            "tool": "Live Deepfake Capture",
+            "verdict": "Analysis Started",
+            "details": "live_capture_ac250927-276d-4aca-aad7-cb39abea9e13.webm"
+        },
+        {
+            "timestamp": "2025-09-06 14:36:51",
+            "tool": "Live Deepfake Capture",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "live_capture_72c0b312-e8da-4137-b999-c8ece8d86890.webm"
+        },
+        {
+            "timestamp": "2025-09-06 14:35:10",
+            "tool": "Live Deepfake Capture",
+            "verdict": "Analysis Started",
+            "details": "live_capture_72c0b312-e8da-4137-b999-c8ece8d86890.webm"
+        },
+        {
+            "timestamp": "2025-09-06 14:29:18",
+            "tool": "Live Deepfake Capture",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "live_capture_2b2ad50a-117a-4fdd-b73d-30b51e61aae4.webm"
+        },
+        {
+            "timestamp": "2025-09-06 14:27:47",
+            "tool": "Live Deepfake Capture",
+            "verdict": "Analysis Started",
+            "details": "live_capture_2b2ad50a-117a-4fdd-b73d-30b51e61aae4.webm"
+        },
+        {
+            "timestamp": "2025-09-06 14:21:17",
+            "tool": "Live Deepfake Capture",
+            "verdict": "Video: REAL, Audio: REAL",
+            "details": "live_capture_682ed86e-3e19-4a65-b8f2-1ad83af36bac.webm"
+        },
+        {
+            "timestamp": "2025-09-06 14:20:19",
+            "tool": "Live Deepfake Capture",
+            "verdict": "Analysis Started",
+            "details": "live_capture_682ed86e-3e19-4a65-b8f2-1ad83af36bac.webm"
+        },
+        {
+            "timestamp": "2025-09-05 21:31:59",
+            "tool": "Deepfake Audio",
+            "verdict": "REAL",
+            "details": "harvard.wav (100.00%)"
+        },
+        {
+            "timestamp": "2025-09-05 21:29:57",
+            "tool": "Deepfake Audio",
+            "verdict": "REAL",
+            "details": "harvard.wav (100.00%)"
+        },
+        {
+            "timestamp": "2025-09-05 20:14:13",
+            "tool": "Deepfake Audio",
+            "verdict": "REAL",
+            "details": "harvard.wav (100.00%)"
+        },
+        {
+            "timestamp": "2025-09-05 20:13:42",
+            "tool": "Deepfake Audio",
+            "verdict": "FAKE",
+            "details": "M_0014_11y7m_1.wav (98.40%)"
+        },
+        {
+            "timestamp": "2025-09-05 15:54:01",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "tab-recording-1757067139442.mp4"
+        },
+        {
+            "timestamp": "2025-09-05 11:37:31",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u00a0\n\n\u2705\t\n\n\u00a0\n\u00a0\n\n\u00a0\n\nAugust 18 - August 24\n\n\n\u00a0\nYour Week..."
+        },
+        {
+            "timestamp": "2025-09-05 10:53:28",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u00a0\n\n\u2705\t\n\n\u00a0\n\u00a0\n\n\u00a0\n\nAugust 18 - August 24\n\n\n\u00a0\nYour Week..."
+        },
+        {
+            "timestamp": "2025-09-05 10:42:45",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u00a0\n\n\u2705\t\n\n\u00a0\n\u00a0\n\n\u00a0\n\nAugust 18 - August 24\n\n\n\u00a0\nYour Week..."
+        },
+        {
+            "timestamp": "2025-09-05 10:27:12",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u00a0\n\n\u2705\t\n\n\u00a0\n\u00a0\n\n\u00a0\n\nAugust 18 - August 24\n\n\n\u00a0\nYour Week..."
+        },
+        {
+            "timestamp": "2025-09-05 10:26:44",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u00a0\n\n\u2705\t\n\n\u00a0\n\u00a0\n\n\u00a0\n\nAugust 18 - August 24\n\n\n\u00a0\nYour Week..."
+        },
+        {
+            "timestamp": "2025-09-05 10:12:24",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u00a0\n\n\t\n\n\u00a0\n\u00a0\n\n\u00a0\n\nAugust 18 - August 24\n\n\n\u00a0\nYour Weekl..."
+        },
+        {
+            "timestamp": "2025-09-05 10:05:49",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: REAL",
+            "details": "British_Accent_in_10_seconds.mp4"
+        },
+        {
+            "timestamp": "2025-09-04 21:40:01",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Very_realistic_Tom_Cruise_Deepfake__AI_Tom_Cruise.mp4"
+        },
+        {
+            "timestamp": "2025-09-04 21:38:20",
+            "tool": "Deepfake Image",
+            "verdict": "FAKE",
+            "details": "Screenshot_2025-09-01_124442.png (99.99%)"
+        },
+        {
+            "timestamp": "2025-09-04 10:10:15",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-04 10:09:43",
+            "tool": "Deepfake Audio",
+            "verdict": "FAKE",
+            "details": "fake_audio.wav (89.36%)"
+        },
+        {
+            "timestamp": "2025-09-04 10:08:06",
+            "tool": "Deepfake Audio",
+            "verdict": "FAKE",
+            "details": "fake_audio.wav (89.36%)"
+        },
+        {
+            "timestamp": "2025-09-03 22:08:02",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\n\nGet Started in 3 Simple Steps\nOpen this email on..."
+        },
+        {
+            "timestamp": "2025-09-03 22:07:49",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-03 22:07:21",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-03 22:07:14",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-03 22:04:01",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-03 21:39:44",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-03 21:39:33",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-03 21:38:56",
+            "tool": "Deepfake Video",
+            "verdict": "Video: REAL, Audio: FAKE",
+            "details": "Pardesiya_-_Param_Sundari__Sidharth_M_Janhvi_K.mp4"
+        },
+        {
+            "timestamp": "2025-09-03 21:34:15",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Pardesiya_-_Param_Sundari__Sidharth_M_Janhvi_K.mp4"
+        },
+        {
+            "timestamp": "2025-09-03 21:27:58",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Pardesiya_-_Param_Sundari__Sidharth_M_Janhvi_K.mp4"
+        },
+        {
+            "timestamp": "2025-09-03 21:24:29",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "The_Conjuring_Last_Rites__Official_Trailer.mp4"
+        },
+        {
+            "timestamp": "2025-09-03 21:17:09",
+            "tool": "URL Scan",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/G7JNnUCAiMgickGq2_..."
+        },
+        {
+            "timestamp": "2025-09-03 21:15:09",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/eh/yBNjEcFDGVRCC2yMQ..."
+        },
+        {
+            "timestamp": "2025-09-03 21:15:08",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/vLNJ33HljbP6kFPcpL..."
+        },
+        {
+            "timestamp": "2025-09-03 21:15:07",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/vb/ozoknLFBZDv0mP7SP..."
+        },
+        {
+            "timestamp": "2025-09-03 21:15:06",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/ZPYl0YS-gi6Uv_vik7..."
+        },
+        {
+            "timestamp": "2025-09-03 21:15:05",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/cYI_rgP-OM-5iN8L5k..."
+        },
+        {
+            "timestamp": "2025-09-03 21:15:04",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/HWaiplWKofiyIA1z9F..."
+        },
+        {
+            "timestamp": "2025-09-03 21:15:03",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/Y1fFQWNqOIMUC-HiSi..."
+        },
+        {
+            "timestamp": "2025-09-03 21:15:02",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/HanAYyp5gyx97y-3zi..."
+        },
+        {
+            "timestamp": "2025-09-03 21:15:01",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/iUr8p47SS4e2Zo_4L6..."
+        },
+        {
+            "timestamp": "2025-09-03 21:15:00",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/v48Co2H9KOqzkkaZ-D..."
+        },
+        {
+            "timestamp": "2025-09-03 21:14:59",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/i2dJpyxyary9U3lBWw..."
+        },
+        {
+            "timestamp": "2025-09-03 21:14:58",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/YigkLsxnoVgSklUJtG..."
+        },
+        {
+            "timestamp": "2025-09-03 21:14:57",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/UreK7e7iyB3UBvywBV..."
+        },
+        {
+            "timestamp": "2025-09-03 21:14:56",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/wERAb6Hq_Vlw8GCIkW..."
+        },
+        {
+            "timestamp": "2025-09-03 21:14:55",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/TEotdk-Hz-qT0MzrGk..."
+        },
+        {
+            "timestamp": "2025-09-03 21:14:54",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/w7Rn_etG4aDC4t7vha..."
+        },
+        {
+            "timestamp": "2025-09-03 21:14:53",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/G7JNnUCAiMgickGq2_..."
+        },
+        {
+            "timestamp": "2025-09-03 21:14:51",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/gPsXsbevIiZRnzTup1..."
+        },
+        {
+            "timestamp": "2025-09-03 21:14:50",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/NoS-b-KlBOBd97Leyr..."
+        },
+        {
+            "timestamp": "2025-09-03 21:14:50",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-03 21:12:44",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/eh/yBNjEcFDGVRCC2yMQ..."
+        },
+        {
+            "timestamp": "2025-09-03 21:12:43",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/vLNJ33HljbP6kFPcpL..."
+        },
+        {
+            "timestamp": "2025-09-03 21:12:42",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/vb/ozoknLFBZDv0mP7SP..."
+        },
+        {
+            "timestamp": "2025-09-03 21:12:41",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/ZPYl0YS-gi6Uv_vik7..."
+        },
+        {
+            "timestamp": "2025-09-03 21:12:40",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/cYI_rgP-OM-5iN8L5k..."
+        },
+        {
+            "timestamp": "2025-09-03 21:12:39",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/HWaiplWKofiyIA1z9F..."
+        },
+        {
+            "timestamp": "2025-09-03 21:12:38",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/Y1fFQWNqOIMUC-HiSi..."
+        },
+        {
+            "timestamp": "2025-09-03 21:12:37",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/HanAYyp5gyx97y-3zi..."
+        },
+        {
+            "timestamp": "2025-09-03 21:12:36",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/iUr8p47SS4e2Zo_4L6..."
+        },
+        {
+            "timestamp": "2025-09-03 21:12:35",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/v48Co2H9KOqzkkaZ-D..."
+        },
+        {
+            "timestamp": "2025-09-03 21:12:34",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/i2dJpyxyary9U3lBWw..."
+        },
+        {
+            "timestamp": "2025-09-03 21:12:33",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/YigkLsxnoVgSklUJtG..."
+        },
+        {
+            "timestamp": "2025-09-03 21:12:31",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/UreK7e7iyB3UBvywBV..."
+        },
+        {
+            "timestamp": "2025-09-03 21:12:30",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/wERAb6Hq_Vlw8GCIkW..."
+        },
+        {
+            "timestamp": "2025-09-03 21:12:29",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/TEotdk-Hz-qT0MzrGk..."
+        },
+        {
+            "timestamp": "2025-09-03 21:12:28",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/w7Rn_etG4aDC4t7vha..."
+        },
+        {
+            "timestamp": "2025-09-03 21:12:27",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/G7JNnUCAiMgickGq2_..."
+        },
+        {
+            "timestamp": "2025-09-03 21:12:26",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/gPsXsbevIiZRnzTup1..."
+        },
+        {
+            "timestamp": "2025-09-03 21:12:25",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/NoS-b-KlBOBd97Leyr..."
+        },
+        {
+            "timestamp": "2025-09-03 21:12:25",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-03 20:31:58",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Akshath_-_Nadaaniyan_Music_Video__Aisha_Ahmed.mp4"
+        },
+        {
+            "timestamp": "2025-09-03 20:29:49",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "The_Conjuring_Last_Rites__Official_Trailer.mp4"
+        },
+        {
+            "timestamp": "2025-09-03 20:24:14",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/eh/yBNjEcFDGVRCC2yMQ..."
+        },
+        {
+            "timestamp": "2025-09-03 20:24:13",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/vLNJ33HljbP6kFPcpL..."
+        },
+        {
+            "timestamp": "2025-09-03 20:24:12",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/vb/ozoknLFBZDv0mP7SP..."
+        },
+        {
+            "timestamp": "2025-09-03 20:24:11",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/ZPYl0YS-gi6Uv_vik7..."
+        },
+        {
+            "timestamp": "2025-09-03 20:24:10",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/cYI_rgP-OM-5iN8L5k..."
+        },
+        {
+            "timestamp": "2025-09-03 20:24:09",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/HWaiplWKofiyIA1z9F..."
+        },
+        {
+            "timestamp": "2025-09-03 20:24:08",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/Y1fFQWNqOIMUC-HiSi..."
+        },
+        {
+            "timestamp": "2025-09-03 20:24:07",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/HanAYyp5gyx97y-3zi..."
+        },
+        {
+            "timestamp": "2025-09-03 20:24:06",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/iUr8p47SS4e2Zo_4L6..."
+        },
+        {
+            "timestamp": "2025-09-03 20:24:05",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/v48Co2H9KOqzkkaZ-D..."
+        },
+        {
+            "timestamp": "2025-09-03 20:24:04",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/i2dJpyxyary9U3lBWw..."
+        },
+        {
+            "timestamp": "2025-09-03 20:24:03",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/YigkLsxnoVgSklUJtG..."
+        },
+        {
+            "timestamp": "2025-09-03 20:24:02",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/UreK7e7iyB3UBvywBV..."
+        },
+        {
+            "timestamp": "2025-09-03 20:24:01",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/wERAb6Hq_Vlw8GCIkW..."
+        },
+        {
+            "timestamp": "2025-09-03 20:24:00",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/TEotdk-Hz-qT0MzrGk..."
+        },
+        {
+            "timestamp": "2025-09-03 20:23:59",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/w7Rn_etG4aDC4t7vha..."
+        },
+        {
+            "timestamp": "2025-09-03 20:23:58",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/G7JNnUCAiMgickGq2_..."
+        },
+        {
+            "timestamp": "2025-09-03 20:23:57",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/gPsXsbevIiZRnzTup1..."
+        },
+        {
+            "timestamp": "2025-09-03 20:23:56",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/NoS-b-KlBOBd97Leyr..."
+        },
+        {
+            "timestamp": "2025-09-03 20:23:56",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-03 13:24:47",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/i2dJpyxyary9U3lBWw..."
+        },
+        {
+            "timestamp": "2025-09-03 13:24:46",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/YigkLsxnoVgSklUJtG..."
+        },
+        {
+            "timestamp": "2025-09-03 13:24:45",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/UreK7e7iyB3UBvywBV..."
+        },
+        {
+            "timestamp": "2025-09-03 13:24:44",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/wERAb6Hq_Vlw8GCIkW..."
+        },
+        {
+            "timestamp": "2025-09-03 13:24:43",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/TEotdk-Hz-qT0MzrGk..."
+        },
+        {
+            "timestamp": "2025-09-03 13:24:42",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/w7Rn_etG4aDC4t7vha..."
+        },
+        {
+            "timestamp": "2025-09-03 13:24:41",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/G7JNnUCAiMgickGq2_..."
+        },
+        {
+            "timestamp": "2025-09-03 13:24:40",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/gPsXsbevIiZRnzTup1..."
+        },
+        {
+            "timestamp": "2025-09-03 13:24:39",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/NoS-b-KlBOBd97Leyr..."
+        },
+        {
+            "timestamp": "2025-09-03 13:24:39",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-03 13:17:49",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/eh/yBNjEcFDGVRCC2yMQ..."
+        },
+        {
+            "timestamp": "2025-09-03 13:17:47",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/vLNJ33HljbP6kFPcpL..."
+        },
+        {
+            "timestamp": "2025-09-03 13:17:46",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/vb/ozoknLFBZDv0mP7SP..."
+        },
+        {
+            "timestamp": "2025-09-03 13:17:45",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/ZPYl0YS-gi6Uv_vik7..."
+        },
+        {
+            "timestamp": "2025-09-03 13:17:43",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/cYI_rgP-OM-5iN8L5k..."
+        },
+        {
+            "timestamp": "2025-09-03 13:17:42",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/HWaiplWKofiyIA1z9F..."
+        },
+        {
+            "timestamp": "2025-09-03 13:17:40",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/Y1fFQWNqOIMUC-HiSi..."
+        },
+        {
+            "timestamp": "2025-09-03 13:17:39",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/HanAYyp5gyx97y-3zi..."
+        },
+        {
+            "timestamp": "2025-09-03 13:17:38",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/iUr8p47SS4e2Zo_4L6..."
+        },
+        {
+            "timestamp": "2025-09-03 13:17:36",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/v48Co2H9KOqzkkaZ-D..."
+        },
+        {
+            "timestamp": "2025-09-03 13:17:35",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/i2dJpyxyary9U3lBWw..."
+        },
+        {
+            "timestamp": "2025-09-03 13:17:33",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/YigkLsxnoVgSklUJtG..."
+        },
+        {
+            "timestamp": "2025-09-03 13:17:31",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/UreK7e7iyB3UBvywBV..."
+        },
+        {
+            "timestamp": "2025-09-03 13:17:29",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/wERAb6Hq_Vlw8GCIkW..."
+        },
+        {
+            "timestamp": "2025-09-03 13:17:28",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/TEotdk-Hz-qT0MzrGk..."
+        },
+        {
+            "timestamp": "2025-09-03 13:17:26",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/w7Rn_etG4aDC4t7vha..."
+        },
+        {
+            "timestamp": "2025-09-03 13:17:25",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/G7JNnUCAiMgickGq2_..."
+        },
+        {
+            "timestamp": "2025-09-03 13:17:23",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/gPsXsbevIiZRnzTup1..."
+        },
+        {
+            "timestamp": "2025-09-03 13:17:22",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/NoS-b-KlBOBd97Leyr..."
+        },
+        {
+            "timestamp": "2025-09-03 13:17:21",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-03 13:12:51",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/eh/yBNjEcFDGVRCC2yMQ..."
+        },
+        {
+            "timestamp": "2025-09-03 13:12:50",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/vLNJ33HljbP6kFPcpL..."
+        },
+        {
+            "timestamp": "2025-09-03 13:12:50",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/vb/ozoknLFBZDv0mP7SP..."
+        },
+        {
+            "timestamp": "2025-09-03 13:12:49",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/ZPYl0YS-gi6Uv_vik7..."
+        },
+        {
+            "timestamp": "2025-09-03 13:12:48",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/cYI_rgP-OM-5iN8L5k..."
+        },
+        {
+            "timestamp": "2025-09-03 13:12:47",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/HWaiplWKofiyIA1z9F..."
+        },
+        {
+            "timestamp": "2025-09-03 13:12:46",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/Y1fFQWNqOIMUC-HiSi..."
+        },
+        {
+            "timestamp": "2025-09-03 13:12:45",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/HanAYyp5gyx97y-3zi..."
+        },
+        {
+            "timestamp": "2025-09-03 13:12:45",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/iUr8p47SS4e2Zo_4L6..."
+        },
+        {
+            "timestamp": "2025-09-03 13:12:44",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/v48Co2H9KOqzkkaZ-D..."
+        },
+        {
+            "timestamp": "2025-09-03 13:12:43",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/i2dJpyxyary9U3lBWw..."
+        },
+        {
+            "timestamp": "2025-09-03 13:12:42",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/YigkLsxnoVgSklUJtG..."
+        },
+        {
+            "timestamp": "2025-09-03 13:12:41",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/UreK7e7iyB3UBvywBV..."
+        },
+        {
+            "timestamp": "2025-09-03 13:12:40",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/wERAb6Hq_Vlw8GCIkW..."
+        },
+        {
+            "timestamp": "2025-09-03 13:12:40",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/TEotdk-Hz-qT0MzrGk..."
+        },
+        {
+            "timestamp": "2025-09-03 13:12:39",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/w7Rn_etG4aDC4t7vha..."
+        },
+        {
+            "timestamp": "2025-09-03 13:12:38",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/G7JNnUCAiMgickGq2_..."
+        },
+        {
+            "timestamp": "2025-09-03 13:12:37",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/gPsXsbevIiZRnzTup1..."
+        },
+        {
+            "timestamp": "2025-09-03 13:12:36",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/NoS-b-KlBOBd97Leyr..."
+        },
+        {
+            "timestamp": "2025-09-03 13:12:34",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-03 13:07:23",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/eh/yBNjEcFDGVRCC2yMQ..."
+        },
+        {
+            "timestamp": "2025-09-03 13:07:23",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/vLNJ33HljbP6kFPcpL..."
+        },
+        {
+            "timestamp": "2025-09-03 13:07:23",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/vb/ozoknLFBZDv0mP7SP..."
+        },
+        {
+            "timestamp": "2025-09-03 13:07:22",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/ZPYl0YS-gi6Uv_vik7..."
+        },
+        {
+            "timestamp": "2025-09-03 13:07:22",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/cYI_rgP-OM-5iN8L5k..."
+        },
+        {
+            "timestamp": "2025-09-03 13:07:22",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/HWaiplWKofiyIA1z9F..."
+        },
+        {
+            "timestamp": "2025-09-03 13:07:22",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/Y1fFQWNqOIMUC-HiSi..."
+        },
+        {
+            "timestamp": "2025-09-03 13:07:21",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/G7JNnUCAiMgickGq2_..."
+        },
+        {
+            "timestamp": "2025-09-03 13:07:21",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/gPsXsbevIiZRnzTup1..."
+        },
+        {
+            "timestamp": "2025-09-03 13:07:21",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/HanAYyp5gyx97y-3zi..."
+        },
+        {
+            "timestamp": "2025-09-03 13:07:21",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/iUr8p47SS4e2Zo_4L6..."
+        },
+        {
+            "timestamp": "2025-09-03 13:07:21",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/w7Rn_etG4aDC4t7vha..."
+        },
+        {
+            "timestamp": "2025-09-03 13:07:20",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/i2dJpyxyary9U3lBWw..."
+        },
+        {
+            "timestamp": "2025-09-03 13:07:19",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/TEotdk-Hz-qT0MzrGk..."
+        },
+        {
+            "timestamp": "2025-09-03 13:07:19",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/wERAb6Hq_Vlw8GCIkW..."
+        },
+        {
+            "timestamp": "2025-09-03 13:07:19",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/v48Co2H9KOqzkkaZ-D..."
+        },
+        {
+            "timestamp": "2025-09-03 13:07:19",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/YigkLsxnoVgSklUJtG..."
+        },
+        {
+            "timestamp": "2025-09-03 13:07:19",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/NoS-b-KlBOBd97Leyr..."
+        },
+        {
+            "timestamp": "2025-09-03 13:07:18",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/UreK7e7iyB3UBvywBV..."
+        },
+        {
+            "timestamp": "2025-09-03 13:07:17",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-03 13:03:14",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/eh/yBNjEcFDGVRCC2yMQ..."
+        },
+        {
+            "timestamp": "2025-09-03 13:03:13",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/HWaiplWKofiyIA1z9F..."
+        },
+        {
+            "timestamp": "2025-09-03 13:03:13",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/vLNJ33HljbP6kFPcpL..."
+        },
+        {
+            "timestamp": "2025-09-03 13:03:13",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/vb/ozoknLFBZDv0mP7SP..."
+        },
+        {
+            "timestamp": "2025-09-03 13:03:13",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/ZPYl0YS-gi6Uv_vik7..."
+        },
+        {
+            "timestamp": "2025-09-03 13:03:13",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/cYI_rgP-OM-5iN8L5k..."
+        },
+        {
+            "timestamp": "2025-09-03 13:03:12",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/Y1fFQWNqOIMUC-HiSi..."
+        },
+        {
+            "timestamp": "2025-09-03 13:03:11",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/HanAYyp5gyx97y-3zi..."
+        },
+        {
+            "timestamp": "2025-09-03 13:03:11",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/w7Rn_etG4aDC4t7vha..."
+        },
+        {
+            "timestamp": "2025-09-03 13:03:11",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/gPsXsbevIiZRnzTup1..."
+        },
+        {
+            "timestamp": "2025-09-03 13:03:11",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/iUr8p47SS4e2Zo_4L6..."
+        },
+        {
+            "timestamp": "2025-09-03 13:03:11",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/TEotdk-Hz-qT0MzrGk..."
+        },
+        {
+            "timestamp": "2025-09-03 13:03:10",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/NoS-b-KlBOBd97Leyr..."
+        },
+        {
+            "timestamp": "2025-09-03 13:03:09",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/v48Co2H9KOqzkkaZ-D..."
+        },
+        {
+            "timestamp": "2025-09-03 13:03:09",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/i2dJpyxyary9U3lBWw..."
+        },
+        {
+            "timestamp": "2025-09-03 13:03:09",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/YigkLsxnoVgSklUJtG..."
+        },
+        {
+            "timestamp": "2025-09-03 13:03:09",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/G7JNnUCAiMgickGq2_..."
+        },
+        {
+            "timestamp": "2025-09-03 13:03:09",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/wERAb6Hq_Vlw8GCIkW..."
+        },
+        {
+            "timestamp": "2025-09-03 13:03:08",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/UreK7e7iyB3UBvywBV..."
+        },
+        {
+            "timestamp": "2025-09-03 13:03:07",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-03 12:47:40",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/Y1fFQWNqOIMUC-HiSi..."
+        },
+        {
+            "timestamp": "2025-09-03 12:47:39",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/HWaiplWKofiyIA1z9F..."
+        },
+        {
+            "timestamp": "2025-09-03 12:47:39",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/vLNJ33HljbP6kFPcpL..."
+        },
+        {
+            "timestamp": "2025-09-03 12:47:39",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/eh/yBNjEcFDGVRCC2yMQ..."
+        },
+        {
+            "timestamp": "2025-09-03 12:47:39",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/vb/ozoknLFBZDv0mP7SP..."
+        },
+        {
+            "timestamp": "2025-09-03 12:47:39",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/cYI_rgP-OM-5iN8L5k..."
+        },
+        {
+            "timestamp": "2025-09-03 12:47:39",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/ZPYl0YS-gi6Uv_vik7..."
+        },
+        {
+            "timestamp": "2025-09-03 12:47:38",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/HanAYyp5gyx97y-3zi..."
+        },
+        {
+            "timestamp": "2025-09-03 12:47:38",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/w7Rn_etG4aDC4t7vha..."
+        },
+        {
+            "timestamp": "2025-09-03 12:47:38",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/gPsXsbevIiZRnzTup1..."
+        },
+        {
+            "timestamp": "2025-09-03 12:47:37",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/G7JNnUCAiMgickGq2_..."
+        },
+        {
+            "timestamp": "2025-09-03 12:47:37",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/TEotdk-Hz-qT0MzrGk..."
+        },
+        {
+            "timestamp": "2025-09-03 12:47:37",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/iUr8p47SS4e2Zo_4L6..."
+        },
+        {
+            "timestamp": "2025-09-03 12:47:37",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/v48Co2H9KOqzkkaZ-D..."
+        },
+        {
+            "timestamp": "2025-09-03 12:47:37",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/UreK7e7iyB3UBvywBV..."
+        },
+        {
+            "timestamp": "2025-09-03 12:47:37",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/YigkLsxnoVgSklUJtG..."
+        },
+        {
+            "timestamp": "2025-09-03 12:47:37",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/wERAb6Hq_Vlw8GCIkW..."
+        },
+        {
+            "timestamp": "2025-09-03 12:47:37",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/i2dJpyxyary9U3lBWw..."
+        },
+        {
+            "timestamp": "2025-09-03 12:47:36",
+            "tool": "URL Scan (Extension)",
+            "verdict": "Malicious",
+            "details": "https://click.grammarly.com/s/c/NoS-b-KlBOBd97Leyr..."
+        },
+        {
+            "timestamp": "2025-09-03 12:47:35",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-03 12:38:00",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-03 12:30:52",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\n\n\nHi there,\n\n\n\n\nCongratulations! You\u2019ve joined ov..."
+        },
+        {
+            "timestamp": "2025-09-03 12:30:52",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\n\n\nHi there,\n\n\n\n\nCongratulations! You\u2019ve joined ov..."
+        },
+        {
+            "timestamp": "2025-09-03 12:30:52",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\n\n\nHi there,\n\n\n\n\nCongratulations! You\u2019ve joined ov..."
+        },
+        {
+            "timestamp": "2025-09-03 12:30:52",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\n\n\nHi there,\n\n\n\n\nCongratulations! You\u2019ve joined ov..."
+        },
+        {
+            "timestamp": "2025-09-03 12:30:51",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\n\n\nHi there,\n\n\n\n\nCongratulations! You\u2019ve joined ov..."
+        },
+        {
+            "timestamp": "2025-09-03 12:29:53",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\n\n\nHi there,\n\n\n\n\nCongratulations! You\u2019ve joined ov..."
+        },
+        {
+            "timestamp": "2025-09-03 12:29:53",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\n\n\nHi there,\n\n\n\n\nCongratulations! You\u2019ve joined ov..."
+        },
+        {
+            "timestamp": "2025-09-03 12:29:53",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\n\n\nHi there,\n\n\n\n\nCongratulations! You\u2019ve joined ov..."
+        },
+        {
+            "timestamp": "2025-09-03 12:29:51",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\n\n\nHi there,\n\n\n\n\nCongratulations! You\u2019ve joined ov..."
+        },
+        {
+            "timestamp": "2025-09-03 12:29:38",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\n\nGet Started in 3 Simple Steps\nOpen this email on..."
+        },
+        {
+            "timestamp": "2025-09-03 12:29:38",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\n\nGet Started in 3 Simple Steps\nOpen this email on..."
+        },
+        {
+            "timestamp": "2025-09-03 12:29:37",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\n\nGet Started in 3 Simple Steps\nOpen this email on..."
+        },
+        {
+            "timestamp": "2025-09-03 12:29:28",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Phishing",
+            "details": "\n\n\t\nNew sign-in to your account\n\tbhuvaneshkumarg31..."
+        },
+        {
+            "timestamp": "2025-09-03 12:29:27",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Phishing",
+            "details": "\n\n\t\nNew sign-in to your account\n\tbhuvaneshkumarg31..."
+        },
+        {
+            "timestamp": "2025-09-03 12:29:16",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-03 12:24:56",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-03 12:17:48",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-03 12:17:33",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-03 11:58:36",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-03 11:58:27",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-03 11:56:23",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Titanic_s_Happy_Ending_Video.mp4"
+        },
+        {
+            "timestamp": "2025-09-03 11:55:56",
+            "tool": "Deepfake Audio",
+            "verdict": "REAL",
+            "details": "ryan-original.wav (87.75%)"
+        },
+        {
+            "timestamp": "2025-09-03 11:51:14",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-03 11:19:51",
+            "tool": "Deepfake Audio",
+            "verdict": "REAL",
+            "details": "real_audio.wav (87.74%)"
+        },
+        {
+            "timestamp": "2025-09-03 11:19:10",
+            "tool": "Deepfake Video",
+            "verdict": "Video: REAL, Audio: FAKE",
+            "details": "srReal.mp4"
+        },
+        {
+            "timestamp": "2025-09-03 11:17:59",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-03 11:16:42",
+            "tool": "Deepfake Audio",
+            "verdict": "FAKE",
+            "details": "srReal.mp4 (99.98%)"
+        },
+        {
+            "timestamp": "2025-09-03 11:11:01",
+            "tool": "Deepfake Audio",
+            "verdict": "FAKE",
+            "details": "interReal.mp4 (99.95%)"
+        },
+        {
+            "timestamp": "2025-09-03 11:02:30",
+            "tool": "Deepfake Audio",
+            "verdict": "FAKE",
+            "details": "srReal.mp4 (99.98%)"
+        },
+        {
+            "timestamp": "2025-09-03 10:41:59",
+            "tool": "Deepfake Video",
+            "verdict": "Video: REAL, Audio: FAKE",
+            "details": "srReal.mp4"
+        },
+        {
+            "timestamp": "2025-09-03 10:38:20",
+            "tool": "Deepfake Video",
+            "verdict": "Video: REAL, Audio: FAKE",
+            "details": "srReal.mp4"
+        },
+        {
+            "timestamp": "2025-09-03 10:30:30",
+            "tool": "Deepfake Video",
+            "verdict": "Video: REAL, Audio: FAKE",
+            "details": "baseRealAPPLE.mp4"
+        },
+        {
+            "timestamp": "2025-09-03 10:30:01",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "guyfake.mp4"
+        },
+        {
+            "timestamp": "2025-09-03 10:30:00",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "guyfake.mp4"
+        },
+        {
+            "timestamp": "2025-09-03 10:27:41",
+            "tool": "Deepfake Video",
+            "verdict": "Video: REAL, Audio: FAKE",
+            "details": "real1.mp4"
+        },
+        {
+            "timestamp": "2025-09-03 10:26:25",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Titanic_s_Happy_Ending_Video.mp4"
+        },
+        {
+            "timestamp": "2025-09-02 22:02:47",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Titanic_s_Happy_Ending_Video.mp4"
+        },
+        {
+            "timestamp": "2025-09-02 21:56:34",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Titanic_s_Happy_Ending_Video.mp4"
+        },
+        {
+            "timestamp": "2025-09-02 21:50:58",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u00a0\n\n\t\n\n\u00a0\n\u00a0\n\n\u00a0\n\nAugust 18 - August 24\n\n\n\u00a0\nYour Weekl..."
+        },
+        {
+            "timestamp": "2025-09-02 21:44:34",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u00a0\n\n\t\n\n\u00a0\n\u00a0\n\n\u00a0\n\nAugust 18 - August 24\n\n\n\u00a0\nYour Weekl..."
+        },
+        {
+            "timestamp": "2025-09-02 21:41:27",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u00a0\n\n\t\n\n\u00a0\n\u00a0\n\n\u00a0\n\nAugust 18 - August 24\n\n\n\u00a0\nYour Weekl..."
+        },
+        {
+            "timestamp": "2025-09-02 21:40:59",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u00a0\n\n\t\n\n\u00a0\n\u00a0\n\n\u00a0\n\nAugust 18 - August 24\n\n\n\u00a0\nYour Weekl..."
+        },
+        {
+            "timestamp": "2025-09-02 21:34:24",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u00a0\n\n\u2705\t\n\n\u00a0\n\u00a0\n\n\u00a0\n\nAugust 18 - August 24\n\n\n\u00a0\nYour Week..."
+        },
+        {
+            "timestamp": "2025-09-02 21:34:13",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u00a0\n\n\t\n\n\u00a0\n\u00a0\n\n\u00a0\n\nAugust 18 - August 24\n\n\n\u00a0\nYour Weekl..."
+        },
+        {
+            "timestamp": "2025-09-02 21:31:03",
+            "tool": "Email Scan",
+            "verdict": "Not Phishing",
+            "details": "Conversation opened. 1 read me..."
+        },
+        {
+            "timestamp": "2025-09-02 21:30:20",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u00a0\n\n\t\n\n\u00a0\n\u00a0\n\n\u00a0\n\nAugust 18 - August 24\n\n\n\u00a0\nYour Weekl..."
+        },
+        {
+            "timestamp": "2025-09-02 21:16:03",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-02 21:06:25",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-02 20:58:14",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-02 20:57:09",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-09-02 13:17:36",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "live_video_capture.webm"
+        },
+        {
+            "timestamp": "2025-09-02 12:53:02",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Ultra_realistic_Deepfake_of_Elon_Musk.mp4"
+        },
+        {
+            "timestamp": "2025-09-02 12:43:32",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Ultra_realistic_Deepfake_of_Elon_Musk.mp4"
+        },
+        {
+            "timestamp": "2025-09-02 12:39:31",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Ultra_realistic_Deepfake_of_Elon_Musk.mp4"
+        },
+        {
+            "timestamp": "2025-09-02 12:34:28",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Ultra_realistic_Deepfake_of_Elon_Musk.mp4"
+        },
+        {
+            "timestamp": "2025-09-02 12:30:00",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "This_is_not_Morgan_Freeman_-_A_Deepfake_Singular.mp4"
+        },
+        {
+            "timestamp": "2025-09-02 12:05:24",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "This_is_not_Morgan_Freeman_-_A_Deepfake_Singular.mp4"
+        },
+        {
+            "timestamp": "2025-09-02 11:54:40",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "This_is_not_Morgan_Freeman_-_A_Deepfake_Singular.mp4"
+        },
+        {
+            "timestamp": "2025-09-02 11:51:51",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "This_is_not_Morgan_Freeman_-_A_Deepfake_Singular.mp4"
+        },
+        {
+            "timestamp": "2025-09-02 11:40:41",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Ultra_realistic_Deepfake_of_Elon_Musk.mp4"
+        },
+        {
+            "timestamp": "2025-09-01 15:52:43",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Titanic_s_Happy_Ending_Video.mp4"
+        },
+        {
+            "timestamp": "2025-09-01 15:50:09",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u00a0\n\n\t\n\n\u00a0\n\u00a0\n\n\u00a0\n\nAugust 18 - August 24\n\n\n\u00a0\nYour Weekl..."
+        },
+        {
+            "timestamp": "2025-09-01 15:49:10",
+            "tool": "Email Scan",
+            "verdict": "Phishing",
+            "details": "\nSubject: Urgent: Verify Your ..."
+        },
+        {
+            "timestamp": "2025-09-01 15:48:29",
+            "tool": "Deepfake Audio",
+            "verdict": "REAL",
+            "details": "real_audio.wav (87.74%)"
+        },
+        {
+            "timestamp": "2025-09-01 15:48:08",
+            "tool": "Deepfake Audio",
+            "verdict": "FAKE",
+            "details": "fake_audio.wav (89.36%)"
+        },
+        {
+            "timestamp": "2025-09-01 15:46:25",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Titanic_s_Happy_Ending_Video.mp4"
+        },
+        {
+            "timestamp": "2025-09-01 13:28:34",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Titanic_s_Happy_Ending_Video.mp4"
+        },
+        {
+            "timestamp": "2025-09-01 13:27:52",
+            "tool": "Email Scan",
+            "verdict": "Phishing",
+            "details": "Subject: Your Microsoft Accoun..."
+        },
+        {
+            "timestamp": "2025-09-01 13:22:17",
+            "tool": "Email Scan",
+            "verdict": "Phishing",
+            "details": "Subject: Your Microsoft Accoun..."
+        },
+        {
+            "timestamp": "2025-09-01 13:20:43",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Titanic_s_Happy_Ending_Video.mp4"
+        },
+        {
+            "timestamp": "2025-09-01 13:18:00",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u00a0\n\n\t\n\n\u00a0\n\u00a0\n\n\u00a0\n\nAugust 18 - August 24\n\n\n\u00a0\nYour Weekl..."
+        },
+        {
+            "timestamp": "2025-09-01 13:17:59",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u00a0\n\n\t\n\n\u00a0\n\u00a0\n\n\u00a0\n\nAugust 18 - August 24\n\n\n\u00a0\nYour Weekl..."
+        },
+        {
+            "timestamp": "2025-09-01 13:17:42",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Titanic_s_Happy_Ending_Video.mp4"
+        },
+        {
+            "timestamp": "2025-09-01 13:13:36",
+            "tool": "Email Scan",
+            "verdict": "Phishing",
+            "details": "Subject: Your Microsoft Accoun..."
+        },
+        {
+            "timestamp": "2025-09-01 13:06:26",
+            "tool": "Email Scan",
+            "verdict": "Phishing",
+            "details": "Subject: Your Microsoft Accoun..."
+        },
+        {
+            "timestamp": "2025-09-01 13:06:07",
+            "tool": "Email Scan",
+            "verdict": "Phishing",
+            "details": "FAKE\n\nSubject: Urgent: Verify ..."
+        },
+        {
+            "timestamp": "2025-09-01 13:05:04",
+            "tool": "Email Scan",
+            "verdict": "Phishing",
+            "details": "REAL\n\nSubject: Your Microsoft ..."
+        },
+        {
+            "timestamp": "2025-09-01 13:03:20",
+            "tool": "Deepfake Audio",
+            "verdict": "REAL",
+            "details": "real_audio.wav (87.74%)"
+        },
+        {
+            "timestamp": "2025-09-01 13:01:30",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Titanic_s_Happy_Ending_Video.mp4"
+        },
+        {
+            "timestamp": "2025-09-01 12:46:30",
+            "tool": "Email Scan",
+            "verdict": "Phishing",
+            "details": "REAL\n\nSubject: Your Microsoft ..."
+        },
+        {
+            "timestamp": "2025-09-01 12:45:29",
+            "tool": "Deepfake Audio",
+            "verdict": "FAKE",
+            "details": "fake_audio.wav (89.36%)"
+        },
+        {
+            "timestamp": "2025-09-01 12:44:18",
+            "tool": "Deepfake Audio",
+            "verdict": "FAKE",
+            "details": "fake_audio.wav (89.36%)"
+        },
+        {
+            "timestamp": "2025-09-01 12:42:19",
+            "tool": "Deepfake Video",
+            "verdict": "Video: REAL, Audio: FAKE",
+            "details": "real1.mp4"
+        },
+        {
+            "timestamp": "2025-09-01 12:41:24",
+            "tool": "Deepfake Video",
+            "verdict": "Video: REAL, Audio: FAKE",
+            "details": "realTrump.mp4"
+        },
+        {
+            "timestamp": "2025-09-01 12:40:12",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Titanic_s_Happy_Ending_Video.mp4"
+        },
+        {
+            "timestamp": "2025-09-01 11:30:10",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: REAL",
+            "details": "realTrump.mp4"
+        },
+        {
+            "timestamp": "2025-09-01 11:29:03",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: REAL",
+            "details": "real1.mp4"
+        },
+        {
+            "timestamp": "2025-09-01 11:25:37",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u00a0\n\n\t\n\n\u00a0\n\u00a0\n\n\u00a0\n\nAugust 18 - August 24\n\n\n\u00a0\nYour Weekl..."
+        },
+        {
+            "timestamp": "2025-09-01 11:22:34",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: REAL",
+            "details": "Titanic_s_Happy_Ending_Video.mp4"
+        },
+        {
+            "timestamp": "2025-08-31 22:16:13",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-08-31 22:15:39",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: REAL",
+            "details": "Titanic_s_Happy_Ending_Video.mp4"
+        },
+        {
+            "timestamp": "2025-08-31 20:59:24",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Titanic_s_Happy_Ending_Video.mp4"
+        },
+        {
+            "timestamp": "2025-08-31 20:50:52",
+            "tool": "Email Scan",
+            "verdict": "Phishing",
+            "details": "FAKE\n\nSubject: Urgent: Verify ..."
+        },
+        {
+            "timestamp": "2025-08-31 20:45:02",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Titanic_s_Happy_Ending_Video.mp4"
+        },
+        {
+            "timestamp": "2025-08-31 20:43:45",
+            "tool": "Email Scan",
+            "verdict": "Phishing",
+            "details": "FAKE\n\nSubject: Urgent: Verify ..."
+        },
+        {
+            "timestamp": "2025-08-31 20:42:37",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-08-31 20:34:33",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-08-31 20:28:58",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-08-31 20:28:58",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-08-31 20:28:57",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-08-31 20:27:55",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-08-31 20:27:54",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-08-31 20:27:39",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-08-31 20:01:27",
+            "tool": "Email Scan",
+            "verdict": "Phishing",
+            "details": "FAKE\n\nSubject: Urgent: Verify ..."
+        },
+        {
+            "timestamp": "2025-08-31 20:01:06",
+            "tool": "Email Scan",
+            "verdict": "Phishing",
+            "details": "REAL\n\nSubject: Your Microsoft ..."
+        },
+        {
+            "timestamp": "2025-08-31 19:57:29",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-08-31 19:57:29",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-08-31 19:57:29",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-08-31 19:57:29",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-08-31 19:57:29",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-08-31 19:57:29",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-08-31 19:57:29",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-08-31 19:49:44",
+            "tool": "Deepfake Video",
+            "verdict": "Video: FAKE, Audio: FAKE",
+            "details": "Titanic_s_Happy_Ending_Video.mp4"
+        },
+        {
+            "timestamp": "2025-08-31 19:48:35",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\t\t\n\n\nHi Bhuvanesh Kumar G,\nCongrats! You have succ..."
+        },
+        {
+            "timestamp": "2025-08-31 19:48:35",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\t\t\n\n\nHi Bhuvanesh Kumar G,\nCongrats! You have succ..."
+        },
+        {
+            "timestamp": "2025-08-31 19:48:35",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\t\t\n\n\nHi Bhuvanesh Kumar G,\nCongrats! You have succ..."
+        },
+        {
+            "timestamp": "2025-08-31 19:48:35",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\t\t\n\n\nHi Bhuvanesh Kumar G,\nCongrats! You have succ..."
+        },
+        {
+            "timestamp": "2025-08-31 19:48:14",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-08-31 19:48:13",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-08-31 19:48:13",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-08-31 19:48:07",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-08-31 19:48:07",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        },
+        {
+            "timestamp": "2025-08-31 19:47:00",
+            "tool": "Email Scan (Extension)",
+            "verdict": "Not Phishing",
+            "details": "\u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c ..."
+        }
+    ]
+}

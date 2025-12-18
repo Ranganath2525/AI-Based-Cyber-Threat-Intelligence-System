@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CTI Project</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="login-page-body">
+    <div class="login-wrapper">
+        <div class="login-box">
+            <div class="login-header">
+                <h2>Welcome Back!</h2>
+                <p>Login to access your CTI Dashboard.</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                <div class="flash-messages">
+                  {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endwith %}
+
+            <form id="login-form" method="POST">
+                <div class="input-group">
+                    <input type="text" id="username" name="username" required>
+                    <label for="username">Username</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" name="password" required>
+                    <label for="password">Password</label>
+                </div>
+                <button type="submit" class="login-button">Login</button>
+            </form>
+
+            <div class="form-footer">
+                <p>Don't have an account? <a href="{{ url_for('register') }}">Sign Up</a></p>
+            </div>
+            
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='login_script.js') }}"></script>
+</body>
+</html>

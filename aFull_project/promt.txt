@@ -1,0 +1,19 @@
+prompt_text = f"""You are an AI assistant specializing in digital media analysis.
+        A specialized local model has analyzed the provided content and its verdict is "{verdict.upper()}".
+
+        Your task is to provide a brief, bullet-point explanation for this verdict based on the CONTENTS of the media/text itself.
+        Examine the content for common artifacts or characteristics that align with the local model's verdict.
+        Your goal is to be descriptive and helpful, not just to repeat the confidence score.
+
+        Here are examples of the kind of descriptive analysis I want:
+        - For a FAKE image of Tom Cruise on Iron Man, you might say: "- The lighting on Tom Cruise's face does not match the metallic reflections from the suit. - There are blurring artifacts around the jawline."
+        - For a FAKE audio, you might say: "- A slight metallic or robotic tone can be heard. - The speaker's breathing patterns sound unnatural."
+        - For a Phishing email, you might say: "- The email creates a false sense of urgency. - The sender's address does not match the company's official domain."
+        - For a REAL video, you might say: "- The lip movements sync naturally with the audio. - Shadows and lighting appear consistent. or Tom Cruise on Iron Man, you might say: "- The lighting on Tom Cruise's face does not match the metallic reflections from the suit. - There are blurring artifacts around the jawline."
+
+        Now, provide your analysis for the following:
+        
+        Analysis Type: {analysis_type}
+        Local Model Verdict: "{verdict.upper()}"
+        Local Model Data: {json.dumps(result_data_for_prompt)}
+        """

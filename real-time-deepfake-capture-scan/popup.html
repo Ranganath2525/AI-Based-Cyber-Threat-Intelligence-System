@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Live Scanner</title>
+  <style>
+    body { font-family: Arial, sans-serif; width: 280px; text-align: center; padding: 15px; }
+    h1 { font-size: 18px; color: #333; }
+    button { width: 100%; padding: 12px; font-size: 16px; cursor: pointer; background-color: #ffc107; color: #212529; border: none; border-radius: 5px; font-weight: bold; }
+    button:disabled { background-color: #9E9E9E; cursor: not-allowed; }
+    p { font-size: 14px; color: #555; margin-top: 15px; min-height: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Live Deepfake Scanner</h1>
+  <p id="status">Record tab for 30s & run deepfake analysis.</p>
+  <button id="startBtn">Record & Analyze</button>
+  <script src="popup.js"></script>
+</body>
+</html>

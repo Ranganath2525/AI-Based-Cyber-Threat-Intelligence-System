@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malicious URL Detector</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; background-color: #f4f4f9; }
+        .container { max-width: 700px; margin: auto; padding: 2em; background-color: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #333; }
+        input[type="text"] { width: 100%; padding: 10px; margin-bottom: 1em; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #0056b3; }
+        #results { margin-top: 1.5em; padding: 1em; background-color: #e9ecef; border: 1px solid #dee2e6; border-radius: 4px; white-space: pre-wrap; word-wrap: break-word; }
+        .safe { color: green; }
+        .malicious { color: red; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Malicious URL Detector</h1>
+        <input type="text" id="urlInput" placeholder="Enter a URL to analyze...">
+        <button onclick="analyzeUrl()">Analyze</button>
+        <pre id="results">Results will be displayed here...</pre>
+    </div>
+
+    <script>
+        async function analyzeUrl() {
+            const url = document.getElementById('urlInput').value;
+            const resultsDiv = document.getElementById('results');
+
+            if (!url) {
+                resultsDiv.textContent = 'Please enter a URL.';
+                return;
+            }
+
+            resultsDiv.textContent = 'Analyzing...';
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/api/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ "url": url }),
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'An unknown error occurred.');
+                }
+                
+                // Display the formatted results
+                const statusClass = data.status === 'safe' ? 'safe' : 'malicious';
+                resultsDiv.innerHTML = `<strong>Status: <span class="${statusClass}">${data.status.toUpperCase()}</span></strong>\n`;
+                resultsDiv.innerHTML += `<strong>Risk Score:</strong> ${data.riskScore}\n\n`;
+                resultsDiv.innerHTML += `<strong>Full Details:</strong>\n${JSON.stringify(data, null, 2)}`;
+
+
+            } catch (error) {
+                resultsDiv.textContent = `Error: ${error.message}`;
+                resultsDiv.className = 'malicious';
+            }
+        }
+    </script>
+
+</body>
+</html>

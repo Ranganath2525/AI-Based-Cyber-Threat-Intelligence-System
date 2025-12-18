@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Deepfake Detector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="theme-switch-wrapper"><label class="theme-switch" for="checkbox"><input type="checkbox" id="checkbox" /><div class="slider round"></div></label></div>
+    <main class="container">
+        <div class="card">
+            <!-- Upload State -->
+            <div id="upload-state">
+                <header><h1>Ultimate Detector</h1><p>Upload a video to analyze its authenticity.</p></header>
+                <form id="upload-form" enctype="multipart/form-data">
+                    <div id="drag-drop-area">
+                        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M14 13.5V8C14 7.44772 13.5523 7 13 7H11C10.4477 7 10 7.44772 10 8V13.5H7.70711C7.07714 13.5 6.76215 14.2379 7.20711 14.6829L11.2071 18.6829C11.6386 19.1144 12.3614 19.1144 12.7929 18.6829L16.7929 14.6829C17.2378 14.2379 16.9229 13.5 16.2929 13.5H14ZM6 20C6 20.5523 6.44772 21 7 21H17C17.5523 21 18 20.5523 18 20C18 19.4477 17.5523 19 17 19H7C6.44772 19 6 19.4477 6 20Z"></path></svg></div>
+                        <p>Drag & drop a video here, or <strong>click to browse</strong>.</p>
+                        <input type="file" id="video-input" name="video" accept="video/*" hidden>
+                    </div>
+                </form>
+            </div>
+            <!-- Progress State (This will show during the long analysis) -->
+            <div id="progress-area" class="hidden"><div class="spinner"></div><p id="progress-text">Analyzing every frame... This will take time.</p></div>
+            <!-- Result State (Simplified) -->
+            <div id="result-area" class="hidden">
+                <h2>Analysis Report</h2>
+                <div class="verdict" id="verdict-text"></div>
+                <p id="video-score-text" class="detail-item"></p>
+                <button id="reset-button" class="action-button">Analyze Another Video</button>
+            </div>
+            <!-- Error State -->
+            <div id="error-area" class="hidden"><h2>An Error Occurred</h2><p id="error-text"></p><button id="error-reset-button" class="action-button">Try Again</button></div>
+        </div>
+        <!-- README Section -->
+        <section class="readme-card">
+            <h2 class="readme-title">How It Works</h2>
+            <h3>The Model's Journey: "Lab Expert" to "Street Cop"</h3>
+            <p>The AI model at the core of this project was developed through a professional, multi-stage workflow to ensure maximum real-world accuracy.</p>
+            <ol>
+                <li><strong>Foundational Knowledge:</strong> An initial model was trained on a massive, clean dataset of 140,000 images, achieving 99%+ accuracy in a "lab" environment.</li>
+                <li><strong>Real-World Testing:</strong> This "lab expert" was then tested against a library of real-world videos containing various deepfake techniques (face-swapping, lip-syncing).</li>
+                <li><strong>Fine-Tuning for Reality:</strong> The champion model was then put through a final "fine-tuning" phase. It was re-trained on a specialized dataset created from those same real-world videos. This taught the model how to apply its vast knowledge to the types of fakes seen on the internet, creating the final **ULTIMATE Champion model**.</li>
+            </ol>
+            <h3>The Detection Process</h3>
+            <p>When you upload a video, the system performs a robust analysis by processing **every single frame** to analyze lip movements and facial reactions. The model's "fake confidence" score for each frame is averaged to produce a final, stable verdict.</p>
+        </section>
+    </main>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - User Management</title>
+    <!-- Link to the main cyber-themed stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="dashboard-page-body">
+    <div class="container">
+        <header>
+            <h1>Admin Panel</h1>
+            <p>Manage user accounts and access.</p>
+            <nav>
+                <a href="{{ url_for('dashboard') }}">Back to Dashboard</a> |
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </nav>
+        </header>
+
+        <!-- Flash messages will appear here -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="flash-messages">
+              {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <div class="admin-content">
+            <h2>User List</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Loop through all users passed from the Flask app -->
+                    {% for username, data in users.items() %}
+                    <tr>
+                        <td>{{ username }}</td>
+                        <td>{{ data.role }}</td>
+                        <!-- Add a class based on status for styling -->
+                        <td class="{{ 'status-active' if data.active else 'status-pending' }}">
+                            {{ 'Active' if data.active else 'Pending Approval' }}
+                        </td>
+                        <td>
+                            <!-- If user is NOT active and NOT an admin, show the activate button -->
+                            {% if not data.active and data.role != 'admin' %}
+                            <form action="{{ url_for('activate_user', username=username) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="activate-button">Activate User</button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

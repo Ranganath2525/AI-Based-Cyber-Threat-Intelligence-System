@@ -1,0 +1,1562 @@
+--- File: D:\PROJECT\CTI\aFull_project\app.py ---
+
+from flask import Flask, render_template, request, jsonify, Response, session, redirect, url_for, flash
+from werkzeug.utils import secure_filename
+import os
+import sys
+import re
+import json
+import uuid
+from functools import wraps
+from datetime import datetime
+import google.generativeai as genai
+# --- MODIFIED: Added new imports for image and file handling
+import base64
+from PIL import Image
+import io
+import mimetypes
+
+# --- Add project subdirectories to the Python path ---
+sys.path.append(os.path.abspath('deepfake_video_bhuvanesh'))
+sys.path.append(os.path.abspath('deepfake_audio_model_rangnath'))
+sys.path.append(os.path.abspath('email_phising_tejaswi'))
+sys.path.append(os.path.abspath('End-to-End-Malicious-URL-Detection_NReshwar'))
+
+# --- Import our engine modules ---
+from deepfake_video_engine import load_model as load_video_model, analyze_video, analyze_image
+from deepfake_audio_engine import load_model as load_audio_model, analyze_audio
+from email_engine import load_model as load_email_model, analyze_email
+from url_engine import load_model as load_url_model, analyze_url
+
+# --- Gemini AI Configuration ---
+try:
+    with open("gemini_api_key.txt", "r") as f:
+        GEMINI_API_KEY = f.read().strip()
+    if not GEMINI_API_KEY:
+        raise ValueError("API Key is empty in the file.")
+    genai.configure(api_key=GEMINI_API_KEY)
+    print("Gemini AI configured successfully.")
+except FileNotFoundError:
+    GEMINI_API_KEY = None
+    print("WARNING: 'gemini_api_key.txt' not found. AI explanations will be disabled.")
+except Exception as e:
+    GEMINI_API_KEY = None
+    print(f"ERROR: Could not initialize Gemini AI. Explanations disabled. Reason: {e}")
+
+# --- MODIFIED: Rewritten function for multimodal explanations ---
+def get_gemini_explanation(analysis_type, result_data, file_path=None):
+    if not GEMINI_API_KEY:
+        return "AI explanations are unavailable. The Gemini API key is not configured."
+
+    try:
+        model = genai.GenerativeModel('gemini-1.5-flash-latest')
+        
+        # 1. Prepare the text part of the prompt
+        # If frame_scores exist, round them for a cleaner prompt
+        if 'frame_scores' in result_data:
+            result_data['frame_scores'] = [round(score, 2) for score in result_data['frame_scores']]
+
+        # Remove the bulky result_image from the JSON to keep the prompt clean
+        result_data_for_prompt = result_data.copy()
+        result_data_for_prompt.pop('result_image', None)
+        
+        text_prompt = f"""Analyze the provided media and the analysis results to generate a concise, non-technical explanation (2-3 sentences).
+        
+        Analysis Type: {analysis_type}
+        Analysis Results: {json.dumps(result_data_for_prompt)}
+        
+        Based on the visual evidence in the media and the data, what key indicators led to this verdict? If frame scores are present, comment on any significant trends or inconsistencies.
+        """
+        
+        prompt_parts = [text_prompt]
+        
+        # 2. Prepare the media part of the prompt (video or image)
+        media_attached = False
+        video_size_limit = 25 * 1024 * 1024 # 25 MB
+
+        if file_path and os.path.exists(file_path):
+            file_size = os.path.getsize(file_path)
+            mime_type, _ = mimetypes.guess_type(file_path)
+            
+            # Prioritize sending the video if it's small enough
+            if mime_type and 'video' in mime_type and file_size < video_size_limit:
+                print(f"Uploading video '{os.path.basename(file_path)}' to Gemini for explanation...")
+                video_file = genai.upload_file(path=file_path)
+                prompt_parts.append(video_file)
+                media_attached = True
+        
+        # If no video was attached (either too big, not a video, or no file_path), fall back to the result_image
+        if not media_attached and 'result_image' in result_data:
+            print("Attaching analyzed image frame to Gemini prompt...")
+            image_bytes = base64.b64decode(result_data['result_image'])
+            img = Image.open(io.BytesIO(image_bytes))
+            prompt_parts.append(img)
+
+        # 3. Generate content
+        print("Sending multimodal prompt to Gemini...")
+        response = model.generate_content(prompt_parts)
+        
+        # Clean up uploaded file if necessary
+        if 'video_file' in locals() and video_file:
+            genai.delete_file(video_file.name)
+            print(f"Cleaned up temporary Gemini file: {video_file.name}")
+
+        return response.text
+
+    except Exception as e:
+        error_message = f"Could not generate AI explanation. The API call failed. (Error: {e})"
+        print(f"ERROR [Gemini]: {error_message}")
+        return error_message
+
+app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['SECRET_KEY'] = 'a-very-secret-key-change-it-later'
+USERS_FILE = 'users.json'
+HISTORY_FILE = 'history.json'
+
+# --- (User & History Management, Decorators, Auth Routes remain the same) ---
+def load_users():
+    if not os.path.exists(USERS_FILE):
+        return {"admin": {"password": "admin", "email": "admin@example.com", "role": "admin", "active": True}}
+    with open(USERS_FILE, 'r') as f:
+        return json.load(f)
+
+def save_users(users):
+    with open(USERS_FILE, 'w') as f:
+        json.dump(users, f, indent=4)
+
+def load_history():
+    if not os.path.exists(HISTORY_FILE):
+        return {}
+    with open(HISTORY_FILE, 'r') as f:
+        return json.load(f)
+
+def save_history(history):
+    with open(HISTORY_FILE, 'w') as f:
+        json.dump(history, f, indent=4)
+
+def add_history_entry(username, tool, verdict, details):
+    history = load_history()
+    if username not in history:
+        history[username] = []
+    
+    entry = {
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "tool": tool,
+        "verdict": verdict,
+        "details": details
+    }
+    history[username].insert(0, entry)
+    save_history(history)
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' not in session:
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' not in session or session.get('role') != 'admin':
+            flash("You don't have permission to access this page.", "error")
+            return redirect(url_for('dashboard'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+ALLOWED_MEDIA_EXTENSIONS = {'mp4', 'mov', 'avi', 'mkv', 'wav', 'mp3', 'flac', 'jpg', 'jpeg', 'png', 'webp'}
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_MEDIA_EXTENSIONS
+
+@app.route('/', methods=['GET', 'POST'])
+def login():
+    if 'username' in session:
+        return redirect(url_for('dashboard'))
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        users = load_users()
+        if username in users and users[username]['password'] == password:
+            if users[username]['active']:
+                session['username'] = username
+                session['role'] = users[username]['role']
+                return redirect(url_for('dashboard'))
+            else:
+                flash("Your account is pending approval.", "warning")
+        else:
+            flash("Invalid username or password.", "error")
+    return render_template('login.html')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        email = request.form['email']
+        users = load_users()
+        if username in users:
+            flash("Username already exists.", "error")
+        else:
+            users[username] = {'password': password, 'email': email, 'role': 'user', 'active': False}
+            save_users(users)
+            flash("Registration successful! Please wait for admin approval.", "success")
+            return redirect(url_for('login'))
+    return render_template('register.html')
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash("You have been logged out.", "success")
+    return redirect(url_for('login'))
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    history = load_history()
+    user_history = history.get(session['username'], [])
+    return render_template('index.html', history=user_history)
+
+@app.route('/admin')
+@admin_required
+def admin_panel():
+    users = load_users()
+    history = load_history()
+    return render_template('admin_panel.html', users=users, history=history)
+
+@app.route('/activate_user/<username>', methods=['POST'])
+@admin_required
+def activate_user(username):
+    users = load_users()
+    if username in users:
+        users[username]['active'] = True
+        save_users(users)
+        flash(f"User {username} has been activated.", "success")
+    else:
+        flash(f"User {username} not found.", "error")
+    return redirect(url_for('admin_panel'))
+
+@app.route('/upload_video', methods=['POST'])
+@login_required
+def upload_video():
+    file = request.files.get('file')
+    if not file or not allowed_file(file.filename):
+        return jsonify({'error': 'Invalid file type'}), 400
+    filename = secure_filename(file.filename)
+    task_id = f"{uuid.uuid4()}_{filename}"
+    path = os.path.join(app.config['UPLOAD_FOLDER'], task_id)
+    file.save(path)
+    return jsonify({'task_id': task_id, 'filename': filename})
+
+@app.route('/stream_video_analysis/<task_id>')
+@login_required
+def stream_video_analysis(task_id):
+    username = session.get('username')
+    filename = request.args.get('filename', 'video_file')
+    path = os.path.join(app.config['UPLOAD_FOLDER'], task_id)
+    if '..' in task_id or not os.path.exists(path):
+        return Response("Invalid task ID", status=404)
+
+    def generate(current_user):
+        final_result = None
+        try:
+            for data in analyze_video(path):
+                if data.get("type") == "result":
+                    final_result = data
+                    add_history_entry(current_user, "Deepfake Video", data['verdict'], f"{filename} ({data['average_confidence']:.2%})")
+                yield f"data: {json.dumps(data)}\n\n"
+
+            if final_result:
+                # --- MODIFIED: Pass the file path to the explanation function ---
+                explanation = get_gemini_explanation("Deepfake Video", final_result, file_path=path)
+                yield f"data: {json.dumps({'type': 'explanation', 'explanation': explanation})}\n\n"
+        
+        except Exception as e:
+            print(f"ERROR in stream_video_analysis: {e}")
+            yield f"data: {json.dumps({'type': 'error', 'message': f'An unexpected error occurred during analysis: {e}'})}\n\n"
+        finally:
+            if os.path.exists(path):
+                os.remove(path)
+
+    return Response(generate(username), mimetype='text/event-stream')
+
+@app.route('/predict_image', methods=['POST'])
+@login_required
+def predict_image():
+    file = request.files.get('file')
+    if not file or not allowed_file(file.filename):
+        return jsonify({'error': 'Invalid file'}), 400
+    filename = secure_filename(file.filename)
+    unique_filename = f"{uuid.uuid4()}_{filename}"
+    path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
+    file.save(path)
+    
+    result = None
+    err = None
+    try:
+        result, err = analyze_image(path)
+        if err:
+            return jsonify({'error': err}), 500
+        
+        verdict = "FAKE" if result['average_confidence'] > 0.5 else "REAL"
+        add_history_entry(session['username'], "Deepfake Image", verdict, f"{filename} ({result['average_confidence']:.2%})")
+        
+        # --- MODIFIED: Pass the file path to the explanation function ---
+        explanation = get_gemini_explanation("Deepfake Image", result, file_path=path)
+        
+        return jsonify({
+            "verdict": verdict, 
+            "average_confidence": result['average_confidence'], 
+            "result_image": result['result_image'],
+            "explanation": explanation
+        })
+    finally:
+        if os.path.exists(path):
+            os.remove(path)
+
+
+@app.route('/predict_audio', methods=['POST'])
+@login_required
+def predict_audio():
+    file = request.files.get('file')
+    if not file or not allowed_file(file.filename):
+        return jsonify({'error': 'Invalid file'}), 400
+    filename = secure_filename(file.filename)
+    unique_filename = f"{uuid.uuid4()}_{filename}"
+    path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
+    file.save(path)
+    try:
+        result, err = analyze_audio(path)
+    finally:
+        if os.path.exists(path):
+            os.remove(path)
+    if err:
+        return jsonify({'error': err}), 500
+        
+    verdict = "FAKE" if result['prediction'] == 0 else "REAL"
+    add_history_entry(session['username'], "Deepfake Audio", verdict, f"{filename} ({result['confidence']:.2%})")
+    
+    # No file_path is passed here as it's not a visual medium
+    explanation = get_gemini_explanation("Deepfake Audio", result)
+    
+    return jsonify({
+        "verdict": verdict, 
+        "confidence": result['confidence'],
+        "explanation": explanation
+    })
+
+@app.route('/predict_combined', methods=['POST'])
+@login_required
+def predict_combined():
+    email_text = request.json.get('text', '')
+    url_text = request.json.get('url', '')
+    if not email_text and not url_text:
+        return jsonify({'error': 'No input provided'}), 400
+    
+    email_explanation = None
+    email_verdict = "Not Scanned"
+    if email_text:
+        email_result, email_err = analyze_email(email_text)
+        if email_err:
+            return jsonify({'error': f"Email analysis failed: {email_err}"}), 500
+        email_verdict = "Phishing" if email_result.get('is_phishing') else "Not Phishing"
+        add_history_entry(session['username'], "Email Scan", email_verdict, f"{email_text[:30]}...")
+        email_explanation = get_gemini_explanation("Email Phishing", email_result)
+
+    urls_to_scan = re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', email_text)
+    if url_text and url_text not in urls_to_scan:
+        urls_to_scan.append(url_text)
+    
+    url_results = []
+    if urls_to_scan:
+        for url in urls_to_scan:
+            result, err = analyze_url(url)
+            if not err:
+                verdict = "Malicious" if result.get('is_malicious') else "Safe"
+                explanation = get_gemini_explanation("Malicious URL", result)
+                url_results.append({
+                    "url": url, 
+                    "verdict": verdict, 
+                    "risk_score": result.get('risk_score'),
+                    "explanation": explanation
+                })
+                add_history_entry(session['username'], "URL Scan", verdict, f"{url[:50]}...")
+    
+    return jsonify({
+        "email_verdict": email_verdict, 
+        "email_explanation": email_explanation,
+        "urls_found": len(urls_to_scan), 
+        "url_analysis": url_results
+    })
+
+def load_all_models():
+    print("--- Pre-loading all AI models into memory ---")
+    load_video_model()
+    load_audio_model()
+    load_url_model()
+    load_email_model()
+    print("\n--- All models loaded. Server is ready. ---")
+
+if __name__ == '__main__':
+    if not os.path.exists(app.config['UPLOAD_FOLDER']):
+        os.makedirs(app.config['UPLOAD_FOLDER'])
+    load_all_models()
+    app.run(host='0.0.0.0', port=5000, debug=True)
+
+--- File: D:\PROJECT\CTI\aFull_project\templates\index.html ---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTI Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=1.7">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="dashboard-page-body">
+    <div class="container">
+        <header>
+            <h1>Cyber-Threat Intelligence Dashboard</h1>
+            {% if session.username %}
+                 <p>Welcome, <strong>{{ session.username }}</strong>!</p>
+            {% endif %}
+            <nav>
+                {% if session.role == 'admin' %}
+                    <a href="{{ url_for('admin_panel') }}">Admin Panel</a> |
+                {% endif %}
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </nav>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-link active" onclick="openTool(event, 'video')">Deepfake Video</button>
+            <button class="tab-link" onclick="openTool(event, 'image')">Deepfake Image</button>
+            <button class="tab-link" onclick="openTool(event, 'audio')">Deepfake Audio</button>
+            <button class="tab-link" onclick="openTool(event, 'combined')">Email & URL Scan</button>
+        </div>
+
+        <div class="tool-content-container">
+            <div id="video" class="tool-content active">
+                <h2>Deepfake Video Detector</h2>
+                <form id="video-form" class="tool-form">
+                     <p>Upload a video file to analyze its authenticity.</p>
+                    <input type="file" name="file" id="video-file-input" accept="video/*" required>
+                    <button type="submit">Analyze Video</button>
+                </form>
+            </div>
+            <div id="image" class="tool-content">
+                <h2>Deepfake Image Detector</h2>
+                <form id="image-form" class="tool-form">
+                    <p>Upload an image to detect AI-generated faces.</p>
+                    <input type="file" name="file" id="image-file-input" accept="image/*" required>
+                    <button type="submit">Analyze Image</button>
+                </form>
+            </div>
+            <div id="audio" class="tool-content">
+                <h2>Deepfake Audio Detector</h2>
+                <form id="audio-form" class="tool-form">
+                    <p>Upload an audio file to detect AI-generated voice.</p>
+                    <input type="file" name="file" id="audio-file-input" accept="audio/*" required>
+                    <button type="submit">Analyze Audio</button>
+                </form>
+            </div>
+            <div id="combined" class="tool-content">
+                <h2>Email & URL Threat Scan</h2>
+                <form id="combined-form" class="tool-form">
+                    <p>Paste email content and/or a URL to scan for threats.</p>
+                    <input type="text" id="url-input" placeholder="Enter a URL to scan...">
+                    <textarea id="combined-input" rows="8" placeholder="Paste the full email content here..."></textarea>
+                    <button type="submit">Perform Combined Analysis</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="status-area" class="card hidden"></div>
+        
+        <div id="result-area" class="card hidden"></div>
+
+        <div id="history-area" class="card">
+            <h2>My Analysis History</h2>
+            <ul id="history-list">
+                {% if history %}
+                    {% for item in history %}
+                        <li>
+                            <span class="history-timestamp">{{ item.timestamp }}</span>
+                            <span class="history-tool">{{ item.tool }}</span>
+                            <span class="history-details">{{ item.details }}</span>
+                            <span class="history-verdict">{{ item.verdict }}</span>
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <li>No history yet.</li>
+                {% endif %}
+            </ul>
+        </div>
+
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}?v=1.9"></script> </body>
+</html>
+
+
+--- File: D:\PROJECT\CTI\aFull_project\templates\login.html ---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CTI Project</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="login-page-body">
+    <div class="login-wrapper">
+        <div class="login-box">
+            <div class="login-header">
+                <h2>Welcome Back!</h2>
+                <p>Login to access your CTI Dashboard.</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                <div class="flash-messages">
+                  {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endwith %}
+
+            <form id="login-form" method="POST">
+                <div class="input-group">
+                    <input type="text" id="username" name="username" required>
+                    <label for="username">Username</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" name="password" required>
+                    <label for="password">Password</label>
+                </div>
+                <button type="submit" class="login-button">Login</button>
+            </form>
+
+            <div class="form-footer">
+                <p>Don't have an account? <a href="{{ url_for('register') }}">Sign Up</a></p>
+            </div>
+            
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='login_script.js') }}"></script>
+</body>
+</html>
+
+--- File: D:\PROJECT\CTI\aFull_project\templates\register.html ---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - CTI Project</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="login-page-body">
+    <div class="login-wrapper">
+        <div class="login-box">
+            <div class="login-header">
+                <h2>Create Account</h2>
+                <p>Join the CTI Dashboard platform.</p>
+            </div>
+            <form id="register-form" method="POST" action="{{ url_for('register') }}">
+                <div class="input-group">
+                    <input type="text" id="username" name="username" required>
+                    <label for="username">Username</label>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="email" name="email" required>
+                    <label for="email">Email</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" name="password" required>
+                    <label for="password">Password</label>
+                </div>
+                <button type="submit" class="login-button">Sign Up</button>
+            </form>
+            <div class="form-footer">
+                <p>Already have an account? <a href="{{ url_for('login') }}">Login Here</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+--- File: D:\PROJECT\CTI\aFull_project\templates\admin_panel.html ---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - User Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="dashboard-page-body">
+    <div class="container">
+        <header>
+            <h1>Admin Panel</h1>
+            <p>Manage user accounts and view all activity.</p>
+            <nav>
+                <a href="{{ url_for('dashboard') }}">Back to Dashboard</a> |
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </nav>
+        </header>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="flash-messages">
+              {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <div class="admin-content">
+            <h2>User List</h2>
+            <table>
+                <thead>
+                    <tr><th>Username</th><th>Role</th><th>Status</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                    {% for username, data in users.items() %}
+                    <tr>
+                        <td>{{ username }}</td>
+                        <td>{{ data.role }}</td>
+                        <td class="{{ 'status-active' if data.active else 'status-pending' }}">
+                            {{ 'Active' if data.active else 'Pending Approval' }}
+                        </td>
+                        <td>
+                            {% if not data.active and data.role != 'admin' %}
+                            <form action="{{ url_for('activate_user', username=username) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="activate-button">Activate</button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- NEW: Complete User History -->
+            <h2 style="margin-top: 40px;">Complete User History</h2>
+            <div class="history-log">
+                {% if history %}
+                    {% for username, entries in history.items() %}
+                        <h3>History for: {{ username }}</h3>
+                        <ul>
+                            {% for item in entries %}
+                                <li>
+                                    <span class="history-timestamp">{{ item.timestamp }}</span>
+                                    <span class="history-tool">{{ item.tool }}</span>
+                                    <span class="history-details">{{ item.details }}</span>
+                                    <span class="history-verdict">{{ item.verdict }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endfor %}
+                {% else %}
+                    <p>No history recorded for any user yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+--- File: D:\PROJECT\CTI\aFull_project\static\style.css ---
+
+/* Original Cyber-Theme Styles */
+
+:root {
+    --bg-dark: #0a0c10;
+    --primary-glow: #00ffff; /* Cyan */
+    --secondary-glow: #4a90e2; /* Blue */
+    --text-primary: #e6f1ff;
+    --text-secondary: #c1cbe0;
+    --font-main: 'Segoe UI', 'Roboto', sans-serif;
+    --border-radius-large: 12px;
+    --border-radius-medium: 8px;
+    /* ADDED: Specific colors for verdicts */
+    --verdict-real-color: #28a745;
+    --verdict-fake-color: #dc3545;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes moveGrid {
+    from { background-position: 0 0; }
+    to { background-position: -60px -60px; }
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    margin: 0;
+    padding: 24px;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+        linear-gradient(90deg, rgba(74, 144, 226, 0.1) 1px, transparent 1px),
+        linear-gradient(rgba(74, 144, 226, 0.1) 1px, transparent 1px);
+    background-size: 30px 30px;
+    opacity: 0.2;
+    z-index: -1;
+    animation: moveGrid 4s linear infinite;
+}
+
+.login-page-body { display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+.login-wrapper { width: 100%; max-width: 420px; }
+.login-box {
+    background: rgba(20, 30, 50, 0.6);
+    backdrop-filter: blur(12px);
+    padding: 40px;
+    border-radius: var(--border-radius-large);
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.15);
+    text-align: center;
+    animation: fadeIn 0.8s ease-out;
+}
+.login-header h2 {
+    margin: 0 0 10px;
+    font-size: 2rem;
+    background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.login-box p { color: var(--text-secondary); }
+.login-box input { width: 100%; padding: 12px; border: 1px solid rgba(74, 144, 226, 0.3); border-radius: 6px; background: rgba(10, 20, 40, 0.7); color: var(--text-primary); font-size: 16px; }
+.login-button { background-image: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow)); color: var(--bg-dark); padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%; }
+.form-footer a { color: var(--primary-glow); }
+
+.flash-messages { margin-bottom: 1rem; }
+.flash { padding: 1rem; border-radius: 6px; border: 1px solid; }
+.flash.success { background-color: rgba(40, 167, 69, 0.2); border-color: rgba(40, 167, 69, 0.5); color: #97e8a9; }
+.flash.error { background-color: rgba(220, 53, 69, 0.2); border-color: rgba(220, 53, 69, 0.5); color: #f8d7da; }
+.flash.warning { background-color: rgba(255, 193, 7, 0.2); border-color: rgba(255, 193, 7, 0.5); color: #fff3cd; }
+
+.container { 
+    width: 100%; 
+    max-width: 900px; 
+    margin: 0 auto;
+    background: rgba(20, 30, 50, 0.6);
+    backdrop-filter: blur(12px);
+    padding: 30px;
+    border-radius: var(--border-radius-large);
+    border: 1px solid rgba(0, 255, 255, 0.2);
+}
+header { text-align: center; border-bottom: 1px solid rgba(74, 144, 226, 0.2); padding-bottom: 20px; margin-bottom: 20px; }
+header h1 { font-size: 2.2rem; background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+header p { color: var(--text-secondary); }
+nav a { color: var(--primary-glow); }
+
+.tabs { display: flex; justify-content: space-around; margin-bottom: 20px; border-bottom: 1px solid rgba(74, 144, 226, 0.2); }
+.tab-link { background: none; border: none; padding: 15px 20px; cursor: pointer; font-size: 16px; color: var(--text-secondary); position: relative; }
+.tab-link.active { color: var(--primary-glow); border-bottom: 3px solid var(--primary-glow); }
+
+.tool-content { display: none; padding: 20px; background: rgba(10, 20, 40, 0.5); border-radius: var(--border-radius-medium); }
+.tool-content.active { display: block; }
+.tool-form input, .tool-form textarea, .tool-form button { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid rgba(74, 144, 226, 0.3); background: rgba(10, 20, 40, 0.7); color: var(--text-primary); }
+.tool-form button { background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow)); color: var(--bg-dark); font-weight: bold; }
+
+#status-area, #result-area, #history-area { margin-top: 20px; padding: 20px; background: rgba(10, 20, 40, 0.7); border-radius: var(--border-radius-medium); }
+.result-grid { display: grid; grid-template-columns: 1fr; gap: 20px; text-align: left; }
+.result-item { padding: 16px; background: rgba(20, 30, 50, 0.6); border-radius: var(--border-radius-medium); }
+.result-item h4 { margin-bottom: 8px; color: var(--primary-glow); font-size: 1.1rem; }
+
+/* Styling for bold and colored verdicts */
+.verdict-real {
+    color: var(--verdict-real-color);
+    font-weight: bold;
+}
+.verdict-fake {
+    color: var(--verdict-fake-color);
+    font-weight: bold;
+}
+
+/* ADDED: Grid for side-by-side visuals in video report */
+.visuals-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: center;
+}
+
+/* MODIFIED: Image styling with new height constraint */
+.result-image-container {
+    grid-column: 1 / -1; /* This will apply for the single image view */
+}
+.visuals-grid .result-image-container {
+    grid-column: auto; /* Override for the side-by-side view */
+}
+.result-image {
+    max-width: 100%;
+    height: 250px; /* Set a fixed height */
+    max-height: 250px; /* Enforce max height */
+    width: 100%;
+    object-fit: contain; /* Ensure aspect ratio is maintained */
+    border-radius: var(--border-radius-medium);
+}
+
+/* MODIFIED: Graph styling with new height constraint */
+.result-graph-container {
+    height: 250px; /* Match the image height */
+}
+
+/* Styling for the integrated explanation box */
+.explanation-container {
+    background: rgba(10, 25, 55, 0.7);
+    border-left: 3px solid var(--primary-glow);
+}
+.explanation-container h3 {
+    color: var(--primary-glow);
+}
+.explanation-container p, .gemini-url-explanation {
+    color: var(--text-secondary);
+}
+
+.hidden { display: none !important; }
+
+#history-list li, .history-log li { border-bottom: 1px solid rgba(74, 144, 226, 0.2); }
+
+.admin-content th { background-color: rgba(20, 40, 70, 0.6); }
+.status-active { color: #28a745; }
+.status-pending { color: #ffc107; }
+.activate-button { background: #28a745; }
+
+
+--- File: D:\PROJECT\CTI\aFull_project\static\script.js ---
+
+// --- GLOBAL CHART & TAB LOGIC ---
+let confidenceChart = null;
+
+function openTool(evt, toolName) {
+    document.querySelectorAll(".tool-content").forEach(tc => tc.classList.remove("active"));
+    document.querySelectorAll(".tab-link").forEach(tl => tl.classList.remove("active"));
+    document.getElementById(toolName).classList.add("active");
+    evt.currentTarget.classList.add("active");
+    hideStatusAndResult();
+}
+
+// --- UI & FORM SUBMISSION LOGIC ---
+const statusArea = document.getElementById('status-area');
+const resultArea = document.getElementById('result-area');
+
+function showLoading(type = 'generic', text = "Analyzing, please wait...") {
+    statusArea.classList.remove('hidden');
+    resultArea.classList.add('hidden');
+    resultArea.innerHTML = ''; // Clear previous results
+    if (type === 'video') {
+        statusArea.innerHTML = `<p id="progress-text">Initializing...</p><div class="progress-bar-container"><div id="progress-bar" style="width: 0%;"></div></div><p id="progress-percentage">0%</p>`;
+    } else {
+        statusArea.innerHTML = `<div class="spinner"></div><p>${text}</p>`;
+    }
+}
+
+function hideStatusAndResult() {
+    statusArea.classList.add('hidden');
+    resultArea.classList.add('hidden');
+}
+
+function showResult(htmlContent) {
+    statusArea.classList.add('hidden');
+    resultArea.innerHTML = htmlContent;
+    resultArea.classList.remove('hidden');
+}
+
+function getVerdictClass(verdict) {
+    const lowerVerdict = verdict.toLowerCase();
+    if (lowerVerdict.includes('real') || lowerVerdict.includes('safe') || lowerVerdict.includes('not phishing')) return 'verdict-real';
+    return 'verdict-fake';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Video Form
+    document.getElementById('video-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fileInput = document.getElementById('video-file-input');
+        if (fileInput.files.length === 0) { showResult('<h3>Input Error</h3><p>Please select a video file.</p>'); return; }
+        showLoading('video');
+        
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+
+        try {
+            const uploadResponse = await fetch('/upload_video', { method: 'POST', body: formData });
+            const uploadData = await uploadResponse.json();
+            if (!uploadResponse.ok) throw new Error(uploadData.error || 'Video upload failed.');
+            
+            const eventSource = new EventSource(`/stream_video_analysis/${uploadData.task_id}?filename=${uploadData.filename}`);
+
+            eventSource.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                if (data.type === 'progress') {
+                    const percentage = (data.processed / data.total) * 100;
+                    document.getElementById('progress-bar').style.width = `${percentage}%`;
+                    document.getElementById('progress-percentage').textContent = `${percentage.toFixed(0)}%`;
+                    document.getElementById('progress-text').textContent = `Processing frame ${data.processed} of ${data.total}`;
+                } else if (data.type === 'result') {
+                    const verdictClass = getVerdictClass(data.verdict);
+                    // MODIFIED: Image and Graph are now inside the .visuals-grid for side-by-side layout
+                    const resultHtml = `<h2>Analysis Report</h2>
+                        <div class="result-grid">
+                            <div class="result-item">
+                                <h4>Verdict: <strong class="${verdictClass}">${data.verdict}</strong></h4>
+                                <p>Avg. Fake Confidence: ${(data.average_confidence * 100).toFixed(2)}%</p>
+                            </div>
+                            <div class="visuals-grid">
+                                <div class="result-image-container"><img src="data:image/jpeg;base64,${data.result_image}" class="result-image"></div>
+                                <div class="result-graph-container"><canvas id="confidenceChart"></canvas></div>
+                            </div>
+                            <div class="result-item explanation-container" id="video-explanation-placeholder" style="grid-column: 1 / -1;"></div>
+                        </div>`;
+                    showResult(resultHtml);
+                    setTimeout(() => {
+                        if (confidenceChart) confidenceChart.destroy();
+                        confidenceChart = new Chart(document.getElementById('confidenceChart'), {
+                            type: 'line', 
+                            data: { 
+                                labels: data.frame_scores.map((_, i) => i + 1), 
+                                datasets: [{ 
+                                    label: 'Fake Confidence', 
+                                    data: data.frame_scores.map(s => s * 100), 
+                                    borderColor: '#00ffff', 
+                                    tension: 0.1 
+                                }] 
+                            },
+                            options: { 
+                                responsive: true, 
+                                maintainAspectRatio: false, 
+                                scales: { y: { beginAtZero: true, max: 100 } } 
+                            }
+                        });
+                    }, 0);
+                } else if (data.type === 'explanation') {
+                    const explanationPlaceholder = document.getElementById('video-explanation-placeholder');
+                    if(explanationPlaceholder) {
+                        explanationPlaceholder.innerHTML = `<h3>AI-Powered Explanation</h3><p>${data.explanation}</p>`;
+                    }
+                    eventSource.close();
+                } else if (data.type === 'error') {
+                    showResult(`<h3>Analysis Error</h3><p>${data.message}</p>`);
+                    eventSource.close();
+                }
+            };
+            eventSource.onerror = () => { 
+                showResult('<h3>Connection Error</h3><p>Failed to get analysis updates. The server might be busy or an error occurred.</p>');
+                eventSource.close(); 
+            };
+        } catch (error) {
+            showResult(`<h3>Error</h3><p>${error.message}</p>`);
+        }
+    });
+
+    // Image Form
+    document.getElementById('image-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fileInput = document.getElementById('image-file-input');
+        if (fileInput.files.length === 0) { showResult('<h3>Input Error</h3><p>Please select an image file.</p>'); return; }
+        showLoading();
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+        try {
+            const response = await fetch('/predict_image', { method: 'POST', body: formData });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || 'Server error');
+            const verdictClass = getVerdictClass(data.verdict);
+            // MODIFIED: Image container now stands alone but respects the new height from CSS
+            const resultHtml = `<h2>Analysis Report</h2>
+                <div class="result-grid">
+                    <div class="result-item">
+                        <h4>Verdict: <strong class="${verdictClass}">${data.verdict}</strong></h4>
+                        <p>Fake Confidence: ${(data.average_confidence * 100).toFixed(2)}%</p>
+                    </div>
+                    <div class="result-image-container"><img src="data:image/jpeg;base64,${data.result_image}" class="result-image"></div>
+                    <div class="result-item explanation-container" style="grid-column: 1 / -1;">
+                        <h3>AI-Powered Explanation</h3>
+                        <p>${data.explanation || 'Not available.'}</p>
+                    </div>
+                </div>`;
+            showResult(resultHtml);
+        } catch (error) {
+            showResult(`<h3>Error</h3><p>${error.message}</p>`);
+        }
+    });
+
+    // Audio Form
+    document.getElementById('audio-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fileInput = document.getElementById('audio-file-input');
+        if (fileInput.files.length === 0) { showResult('<h3>Input Error</h3><p>Please select an audio file.</p>'); return; }
+        showLoading();
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+        try {
+            const response = await fetch('/predict_audio', { method: 'POST', body: formData });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || 'Server error');
+            const verdictClass = getVerdictClass(data.verdict);
+            const resultHtml = `<h2>Analysis Report</h2>
+                <div class="result-grid">
+                    <div class="result-item">
+                        <h4>Verdict: <strong class="${verdictClass}">${data.verdict}</strong></h4>
+                        <p>Confidence: ${(data.confidence * 100).toFixed(2)}%</p>
+                    </div>
+                    <div class="result-item explanation-container" style="grid-column: 1 / -1;">
+                        <h3>AI-Powered Explanation</h3>
+                        <p>${data.explanation || 'Not available.'}</p>
+                    </div>
+                </div>`;
+            showResult(resultHtml);
+        } catch (error) {
+            showResult(`<h3>Error</h3><p>${error.message}</p>`);
+        }
+    });
+
+    // Combined Form
+    document.getElementById('combined-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const urlInput = document.getElementById('url-input');
+        const textInput = document.getElementById('combined-input');
+        if (textInput.value.trim() === '' && urlInput.value.trim() === '') { showResult('<h3>Input Error</h3><p>Please enter an email or a URL.</p>'); return; }
+        showLoading();
+        const formData = { text: textInput.value, url: urlInput.value };
+        try {
+            const response = await fetch('/predict_combined', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || 'Server error');
+            
+            let emailHtml = '';
+            if (data.email_verdict !== 'Not Scanned') {
+                const emailVerdictClass = getVerdictClass(data.email_verdict);
+                emailHtml = `<div class="result-item" style="grid-column: 1 / -1;">
+                                <h4>Email Verdict: <strong class="${emailVerdictClass}">${data.email_verdict}</strong></h4>
+                             </div>
+                             <div class="result-item explanation-container" style="grid-column: 1 / -1;">
+                                <h3>AI-Powered Explanation (Email)</h3>
+                                <p>${data.email_explanation || 'Not available.'}</p>
+                             </div>`;
+            }
+
+            let urlDetails = data.url_analysis.map(url => 
+                `<li>${url.url} -> <strong class="${getVerdictClass(url.verdict)}">${url.verdict}</strong> (${url.risk_score}%)<br><small class='gemini-url-explanation'>${url.explanation || ''}</small></li>`
+            ).join('');
+            const resultHtml = `<h2>Combined Analysis Report</h2>
+                <div class="result-grid">${emailHtml}</div>
+                ${data.urls_found > 0 ? `<div class="result-item" style="margin-top: 1rem; grid-column: 1 / -1;"><h4>URL Analysis</h4><ul>${urlDetails}</ul></div>` : ''}`;
+            
+            showResult(resultHtml);
+        } catch (error) {
+            showResult(`<h3>Error</h3><p>${error.message}</p>`);
+        }
+    });
+});
+
+
+--- File: D:\PROJECT\CTI\aFull_project\deepfake_video_bhuvanesh\deepfake_video_engine.py ---
+
+import torch
+from torch import nn
+from torchvision import models, transforms
+import cv2
+from PIL import Image
+import os
+from tqdm import tqdm
+import numpy as np
+import random
+import base64
+import io
+
+# --- Configuration ---
+MODEL_PATH = os.path.join('deepfake_video_bhuvanesh', 'ULTIMATE_CHAMPION_model.pth')
+PROTOTXT_PATH = os.path.join('face_detector', 'deploy.prototxt.txt')
+WEIGHTS_PATH = os.path.join('face_detector', 'res10_300x300_ssd_iter_140000.caffemodel')
+model = None
+face_net = None
+
+def load_model():
+    """Loads BOTH the deepfake model and the face detection model."""
+    global model, face_net
+    if model is None:
+        print(f"--- Loading Deepfake Video/Image Model ---")
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        model = models.efficientnet_b0(weights=None)
+        num_ftrs = model.classifier[1].in_features
+        model.classifier = nn.Sequential(nn.Dropout(p=0.2, inplace=True), nn.Linear(num_ftrs, 2))
+        model.load_state_dict(torch.load(MODEL_PATH, map_location=device, weights_only=True))
+        model = model.to(device)
+        model.eval()
+        print("Deepfake Video/Image model loaded successfully.")
+
+    if face_net is None:
+        print("--- Loading Face Detection Model ---")
+        face_net = cv2.dnn.readNet(PROTOTXT_PATH, WEIGHTS_PATH)
+        print("Face Detection model loaded successfully.")
+
+def analyze_image(image_path: str):
+    """Analyzes a single image file for deepfake artifacts."""
+    if model is None or face_net is None:
+        raise RuntimeError("Models not loaded. Call load_model() first.")
+
+    try:
+        image = Image.open(image_path)
+    except Exception as e:
+        return None, f"Error opening image file: {e}"
+
+    data_transforms = transforms.Compose([
+        transforms.Resize((224, 224)),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ])
+    
+    device = next(model.parameters()).device
+    fake_class_index = 0
+
+    image_tensor = data_transforms(image).unsqueeze(0).to(device)
+    with torch.no_grad():
+        outputs = model(image_tensor)
+        probs = torch.nn.functional.softmax(outputs, dim=1)
+        fake_confidence = probs[0][fake_class_index].item()
+    
+    result_image_b64 = _draw_bounding_box([image], fake_confidence)
+
+    return {
+        "average_confidence": fake_confidence,
+        "result_image": result_image_b64
+    }, None
+
+def analyze_video(video_path: str):
+    """Analyzes every single frame of a video and yields progress."""
+    if model is None or face_net is None:
+        yield {"type": "error", "message": "Models not loaded."}
+        return
+
+    frames, err = _extract_all_frames(video_path)
+    if err:
+        yield {"type": "error", "message": err}
+        return
+
+    total_frames = len(frames)
+    if total_frames == 0:
+        yield {"type": "error", "message": "No frames could be extracted from the video."}
+        return
+
+    yield {"type": "progress", "processed": 0, "total": total_frames, "message": "Extracted frames, starting analysis..."}
+
+    data_transforms = transforms.Compose([
+        transforms.Resize((224, 224)),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ])
+    
+    device = next(model.parameters()).device
+    fake_class_index = 0 
+    frame_by_frame_scores = []
+
+    for i, frame in enumerate(frames):
+        image_tensor = data_transforms(frame).unsqueeze(0).to(device)
+        with torch.no_grad():
+            outputs = model(image_tensor)
+            probs = torch.nn.functional.softmax(outputs, dim=1)
+            fake_confidence = probs[0][fake_class_index].item()
+            frame_by_frame_scores.append(fake_confidence)
+        
+        yield {"type": "progress", "processed": i + 1, "total": total_frames}
+
+    average_confidence = sum(frame_by_frame_scores) / total_frames if frame_by_frame_scores else 0
+    result_image_b64 = _draw_bounding_box(frames, average_confidence)
+    verdict = "FAKE" if average_confidence > 0.5 else "REAL"
+
+    yield {
+        "type": "result",
+        "verdict": verdict,
+        "average_confidence": average_confidence,
+        "frame_scores": frame_by_frame_scores,
+        "result_image": result_image_b64
+    }
+
+def _draw_bounding_box(frames, score):
+    if not frames: return None
+    frame_to_process = frames[0] if len(frames) == 1 else random.choice(frames)
+    frame_cv = cv2.cvtColor(np.array(frame_to_process), cv2.COLOR_RGB2BGR)
+    (h, w) = frame_cv.shape[:2]
+    blob = cv2.dnn.blobFromImage(cv2.resize(frame_cv, (300, 300)), 1.0, (300, 300), (104.0, 177.0, 123.0))
+    face_net.setInput(blob)
+    detections = face_net.forward()
+    max_confidence = 0.0
+    best_box = None
+    for i in range(0, detections.shape[2]):
+        confidence = detections[0, 0, i, 2]
+        if confidence > max_confidence:
+            max_confidence = confidence
+            best_box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
+    if best_box is not None and max_confidence > 0.5:
+        (startX, startY, endX, endY) = best_box.astype("int")
+        is_fake = score > 0.5
+        label = f"{'FAKE' if is_fake else 'REAL'}: {score:.2%}"
+        color = (0, 0, 255) if is_fake else (0, 255, 0)
+        cv2.rectangle(frame_cv, (startX, startY), (endX, endY), color, 2)
+        y = startY - 10 if startY - 10 > 10 else startY + 10
+        cv2.putText(frame_cv, label, (startX, y), cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
+    final_image_pil = Image.fromarray(cv2.cvtColor(frame_cv, cv2.COLOR_BGR2RGB))
+    buffered = io.BytesIO()
+    final_image_pil.save(buffered, format="JPEG")
+    return base64.b64encode(buffered.getvalue()).decode('utf-8')
+
+def _extract_all_frames(video_path):
+    frames = []
+    try:
+        cap = cv2.VideoCapture(video_path.strip('"'))
+        if not cap.isOpened(): return [], "Error: Could not open video file."
+        while True:
+            ret, frame = cap.read()
+            if not ret: break
+            frames.append(Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)))
+        cap.release()
+        return frames, None
+    except Exception as e:
+        return [], f"Error during frame extraction: {e}"
+
+
+--- File: D:\PROJECT\CTI\aFull_project\deepfake_audio_model_rangnath\deepfake_audio_engine.py ---
+
+import os
+import librosa
+import numpy as np
+import pickle
+
+# --- Configuration ---
+MODEL_PATH = os.path.join('deepfake_audio_model_rangnath', 'deepfake_audio_model.pkl')
+SCALER_PATH = os.path.join('deepfake_audio_model_rangnath', 'scaler.pkl')
+SAMPLE_RATE = 16000
+N_MFCC = 13
+model = None
+scaler = None
+
+def load_model():
+    """Loads the Deepfake Audio model and scaler into memory."""
+    global model, scaler
+    if model is None:
+        print(f"--- Loading Deepfake Audio Model from: '{MODEL_PATH}' ---")
+        if not os.path.exists(MODEL_PATH) or not os.path.exists(SCALER_PATH):
+            raise FileNotFoundError("Audio model or scaler not found!")
+        with open(MODEL_PATH, "rb") as f: model = pickle.load(f)
+        with open(SCALER_PATH, "rb") as f: scaler = pickle.load(f)
+        print("Deepfake Audio model loaded successfully.")
+
+def analyze_audio(audio_file_path):
+    """Analyzes an audio file and returns its prediction and confidence."""
+    if model is None or scaler is None:
+        raise RuntimeError("Audio model has not been loaded. Call load_model() first.")
+    
+    try:
+        y, sr = librosa.load(audio_file_path, sr=SAMPLE_RATE)
+        mfccs = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=N_MFCC)
+        features = np.mean(mfccs, axis=1).reshape(1, -1)
+        features_scaled = scaler.transform(features)
+        pred = model.predict(features_scaled)[0]
+        prob = model.predict_proba(features_scaled)[0]
+        confidence = float(prob[pred])
+        
+        return {"prediction": int(pred), "confidence": confidence}, None
+    except Exception as e:
+        return None, f"Error processing audio file: {e}"
+
+--- File: D:\PROJECT\CTI\aFull_project\End-to-End-Malicious-URL-Detection_NReshwar\url_engine.py ---
+
+import joblib
+import pandas as pd
+import os
+from src.data.feature_extractor import FeatureExtractor
+import numpy as np
+
+# --- Configuration ---
+MODEL_PATH = os.path.join('End-to-End-Malicious-URL-Detection_NReshwar', 'models', 'random_forest.pkl')
+model = None
+
+FEATURE_NAMES = [
+    'qty_dot_url', 'qty_hyphen_url', 'qty_underline_url', 'qty_slash_url', 
+    'qty_questionmark_url', 'qty_equal_url', 'qty_at_url', 'qty_and_url', 
+    'qty_exclamation_url', 'qty_space_url', 'qty_tilde_url', 'qty_comma_url', 
+    'qty_plus_url', 'qty_asterisk_url', 'qty_hashtag_url', 'qty_dollar_url', 
+    'qty_percent_url', 'qty_tld_url', 'length_url', 'qty_dot_domain', 
+    'qty_hyphen_domain', 'qty_underline_domain', 'qty_slash_domain', 
+    'qty_questionmark_domain', 'qty_equal_domain', 'qty_at_domain', 
+    'qty_and_domain', 'qty_exclamation_domain', 'qty_space_domain', 
+    'qty_tilde_domain', 'qty_comma_domain', 'qty_plus_domain', 
+    'qty_asterisk_domain', 'qty_hashtag_domain', 'qty_dollar_domain', 
+    'qty_percent_domain', 'qty_vowels_domain', 'domain_length', 'domain_in_ip', 
+    'server_client_domain'
+]
+
+def load_model():
+    """Loads the Malicious URL model."""
+    global model
+    if model is None:
+        print(f"--- Loading Malicious URL Model ---")
+        model = joblib.load(MODEL_PATH)
+        print("Malicious URL model loaded successfully.")
+
+def analyze_url(url_to_check):
+    """Analyzes a URL and provides a prediction and score."""
+    if model is None:
+        raise RuntimeError("URL model has not been loaded.")
+    
+    try:
+        extractor = FeatureExtractor(url_to_check)
+        features_dict = extractor.extract_all_features()
+        features_df = pd.DataFrame([features_dict])
+        prediction_encoded = model.predict(features_df)
+        prediction_proba = model.predict_proba(features_df)
+        risk_score = round(prediction_proba[0][1] * 100)
+        is_malicious = bool(prediction_encoded[0])
+        
+        return {
+            "is_malicious": is_malicious, 
+            "risk_score": risk_score
+        }, None
+    except Exception as e:
+        return None, f"Error during URL analysis: {e}"
+
+
+--- File: D:\PROJECT\CTI\aFull_project\End-to-End-Malicious-URL-Detection_NReshwar\src\data\feature_extractor.py ---
+
+
+import re
+from urllib.parse import urlparse
+import tldextract
+
+class FeatureExtractor:
+    def __init__(self, url):
+        self.url = url if url.startswith(('http://', 'https://')) else 'http://' + url
+        self.parsed_url = urlparse(self.url)
+        self.domain = self.parsed_url.netloc
+        self.path = self.parsed_url.path
+        self.extracted_tld = tldextract.extract(self.url)
+        self.tld = self.extracted_tld.suffix
+
+    def extract_all_features(self):
+        """
+        Extracts all 40 features required by the model.
+        The feature names are taken directly from the url_engine.py file.
+        """
+        features = {
+            # URL-based features
+            'qty_dot_url': self.url.count('.'),
+            'qty_hyphen_url': self.url.count('-'),
+            'qty_underline_url': self.url.count('_'),
+            'qty_slash_url': self.url.count('/'),
+            'qty_questionmark_url': self.url.count('?'),
+            'qty_equal_url': self.url.count('='),
+            'qty_at_url': self.url.count('@'),
+            'qty_and_url': self.url.count('&'),
+            'qty_exclamation_url': self.url.count('!'),
+            'qty_space_url': self.url.count(' '),
+            'qty_tilde_url': self.url.count('~'),
+            'qty_comma_url': self.url.count(','),
+            'qty_plus_url': self.url.count('+'),
+            'qty_asterisk_url': self.url.count('*'),
+            'qty_hashtag_url': self.url.count('#'),
+            'qty_dollar_url': self.url.count('$'),
+            'qty_percent_url': self.url.count('%'),
+            'qty_tld_url': len(self.tld),
+            'length_url': len(self.url),
+
+            # Domain-based features
+            'qty_dot_domain': self.domain.count('.'),
+            'qty_hyphen_domain': self.domain.count('-'),
+            'qty_underline_domain': self.domain.count('_'),
+            'qty_slash_domain': self.domain.count('/'),
+            'qty_questionmark_domain': self.domain.count('?'),
+            'qty_equal_domain': self.domain.count('='),
+            'qty_at_domain': self.domain.count('@'),
+            'qty_and_domain': self.domain.count('&'),
+            'qty_exclamation_domain': self.domain.count('!'),
+            'qty_space_domain': self.domain.count(' '),
+            'qty_tilde_domain': self.domain.count('~'),
+            'qty_comma_domain': self.domain.count(','),
+            'qty_plus_domain': self.domain.count('+'),
+            'qty_asterisk_domain': self.domain.count('*'),
+            'qty_hashtag_domain': self.domain.count('#'),
+            'qty_dollar_domain': self.domain.count('$'),
+            'qty_percent_domain': self.domain.count('%'),
+            'qty_vowels_domain': sum(1 for char in self.domain if char in 'aeiouAEIOU'),
+            'domain_length': len(self.domain),
+            'domain_in_ip': 1 if re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", self.domain) else 0,
+            
+            # A simple check for 'server' or 'client' in the domain name
+            'server_client_domain': 1 if 'server' in self.domain.lower() or 'client' in self.domain.lower() else 0
+        }
+        return features
+
+
+--- File: D:\PROJECT\CTI\aFull_project\requirements.txt ---
+
+flask
+werkzeug
+requests
+numpy
+scipy
+torch
+torchvision
+opencv-python
+Pillow
+tqdm
+librosa
+pickle-mixin
+tensorflow
+transformers
+huggingface-hub
+joblib
+pandas
+google-generativeai
+python-dotenv
+
+
+--- File: D:\PROJECT\CTI\aFull_project\users.json ---
+
+{
+    "admin": {
+        "password": "admin",
+        "email": "admin@example.com",
+        "role": "admin",
+        "active": true
+    }
+}
+
+
+--- File: D:\PROJECT\CTI\aFull_project\history.json ---
+
+{
+    "admin": [
+        {
+            "timestamp": "2025-08-20 21:53:02",
+            "tool": "Deepfake Video",
+            "verdict": "FAKE",
+            "details": "fake1.mp4 (98.38%)"
+        }
+    ]
+}
+
+
+
+"D:\PROJECT\CTI\aFull_project\End-to-End-Malicious-URL-Detection_NReshwar\url_engine.py"
+
+import joblib
+import pandas as pd
+import os
+from src.data.feature_extractor import FeatureExtractor
+import numpy as np
+
+# --- Configuration ---
+MODEL_PATH = os.path.join('End-to-End-Malicious-URL-Detection_NReshwar', 'models', 'random_forest.pkl')
+model = None
+
+FEATURE_NAMES = [
+    'qty_dot_url', 'qty_hyphen_url', 'qty_underline_url', 'qty_slash_url', 
+    'qty_questionmark_url', 'qty_equal_url', 'qty_at_url', 'qty_and_url', 
+    'qty_exclamation_url', 'qty_space_url', 'qty_tilde_url', 'qty_comma_url', 
+    'qty_plus_url', 'qty_asterisk_url', 'qty_hashtag_url', 'qty_dollar_url', 
+    'qty_percent_url', 'qty_tld_url', 'length_url', 'qty_dot_domain', 
+    'qty_hyphen_domain', 'qty_underline_domain', 'qty_slash_domain', 
+    'qty_questionmark_domain', 'qty_equal_domain', 'qty_at_domain', 
+    'qty_and_domain', 'qty_exclamation_domain', 'qty_space_domain', 
+    'qty_tilde_domain', 'qty_comma_domain', 'qty_plus_domain', 
+    'qty_asterisk_domain', 'qty_hashtag_domain', 'qty_dollar_domain', 
+    'qty_percent_domain', 'qty_vowels_domain', 'domain_length', 'domain_in_ip', 
+    'server_client_domain'
+]
+
+def load_model():
+    """Loads the Malicious URL model."""
+    global model
+    if model is None:
+        print(f"--- Loading Malicious URL Model ---")
+        model = joblib.load(MODEL_PATH)
+        print("Malicious URL model loaded successfully.")
+
+def analyze_url(url_to_check):
+    """Analyzes a URL and provides a prediction and score."""
+    if model is None:
+        raise RuntimeError("URL model has not been loaded.")
+    
+    try:
+        extractor = FeatureExtractor(url_to_check)
+        features_dict = extractor.extract_all_features()
+        features_df = pd.DataFrame([features_dict])
+        prediction_encoded = model.predict(features_df)
+        prediction_proba = model.predict_proba(features_df)
+        risk_score = round(prediction_proba[0][1] * 100)
+        is_malicious = bool(prediction_encoded[0])
+        
+        return {
+            "is_malicious": is_malicious, 
+            "risk_score": risk_score
+        }, None
+    except Exception as e:
+        return None, f"Error during URL analysis: {e}"
+
+
+"D:\PROJECT\CTI\aFull_project\email_phising_tejaswi\email_engine.py"
+
+import tensorflow as tf
+from transformers import BertTokenizer
+import os
+
+# --- Configuration ---
+script_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(script_dir)
+TOKENIZER_PATH = os.path.join(project_root, "local_bert_tokenizer")
+MODEL_PATH = os.path.join('email_phising_tejaswi', 'saved_model')
+tokenizer = None
+model = None
+
+def load_model():
+    """Loads the Email Phishing model and tokenizer into memory."""
+    global tokenizer, model
+    if model is None:
+        print(f"--- Loading Email Phishing Model from: '{MODEL_PATH}' ---")
+        if not os.path.exists(MODEL_PATH):
+            raise FileNotFoundError("Email phishing saved_model folder not found!")
+        print(f"Loading tokenizer from absolute path: {TOKENIZER_PATH}")
+        tokenizer = BertTokenizer.from_pretrained(TOKENIZER_PATH)
+        model = tf.saved_model.load(MODEL_PATH)
+        print("Email Phishing model loaded successfully.")
+
+def analyze_email(email_text):
+    """Analyzes a block of text to determine if it is phishing."""
+    if model is None or tokenizer is None:
+        raise RuntimeError("Email model has not been loaded. Call load_model() first.")
+    
+    encoded = tokenizer(email_text, truncation=True, padding="max_length", max_length=128, return_tensors="tf")
+    inputs = {
+        "input_ids": encoded["input_ids"],
+        "attention_mask": encoded["attention_mask"]
+    }
+    input_keys = model.signatures["serving_default"].structured_input_signature[1].keys()
+    if "token_type_ids" in input_keys:
+        inputs["token_type_ids"] = encoded["token_type_ids"]
+    output = model.signatures["serving_default"](**inputs)
+    prediction = tf.argmax(output["logits"], axis=1).numpy()[0]
+    is_phishing = bool(prediction)
+
+    return {"is_phishing": is_phishing}, None

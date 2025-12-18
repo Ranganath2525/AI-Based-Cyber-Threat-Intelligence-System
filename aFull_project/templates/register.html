@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - CTI Project</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="login-page-body">
+    <div class="login-wrapper">
+        <div class="login-box">
+            <div class="login-header">
+                <h2>Create Account</h2>
+                <p>Join the CTI Dashboard platform.</p>
+            </div>
+            <form id="register-form" method="POST" action="{{ url_for('register') }}">
+                <div class="input-group">
+                    <input type="text" id="username" name="username" required>
+                    <label for="username">Username</label>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="email" name="email" required>
+                    <label for="email">Email</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" name="password" required>
+                    <label for="password">Password</label>
+                </div>
+                <button type="submit" class="login-button">Sign Up</button>
+            </form>
+            <div class="form-footer">
+                <p>Already have an account? <a href="{{ url_for('login') }}">Login Here</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,437 @@
+from flask import Flask, render_template, request, jsonify, Response, session, redirect, url_for, flash
+from werkzeug.utils import secure_filename
+from flask_cors import CORS
+import os
+import sys
+import re
+import json
+import uuid
+from functools import wraps
+from datetime import datetime
+import google.generativeai as genai
+import base64
+from PIL import Image
+import io
+import mimetypes
+import jwt
+from datetime import datetime, timedelta
+from concurrent.futures import ThreadPoolExecutor
+from threading import Lock # --- FIX: Import the Lock class ---
+import time
+
+# --- Add project subdirectories to the Python path ---
+sys.path.append(os.path.abspath('deepfake_video_bhuvanesh'))
+sys.path.append(os.path.abspath('deepfake_audio_model_rangnath'))
+sys.path.append(os.path.abspath('email_phising_tejaswi'))
+sys.path.append(os.path.abspath('End-to-End-Malicious-URL-Detection_NReshwar'))
+
+# --- Import our engine modules ---
+from deepfake_video_engine import load_model as load_video_model, analyze_video, analyze_image
+from deepfake_audio_engine import load_model as load_audio_model, analyze_audio
+from email_engine import load_model as load_email_model, analyze_email
+from url_engine import load_model as load_url_model, analyze_url
+
+# --- Gemini AI Configuration ---
+try:
+    with open("gemini_api_key.txt", "r") as f:
+        GEMINI_API_KEY = f.read().strip()
+    if not GEMINI_API_KEY:
+        raise ValueError("API Key is empty in the file.")
+    genai.configure(api_key=GEMINI_API_KEY)
+    print("Gemini AI configured successfully.")
+except FileNotFoundError:
+    GEMINI_API_KEY = None
+    print("WARNING: 'gemini_api_key.txt' not found. AI explanations will be disabled.")
+except Exception as e:
+    GEMINI_API_KEY = None
+    print(f"ERROR: Could not initialize Gemini AI. Explanations disabled. Reason: {e}")
+
+def get_gemini_explanation(analysis_type, verdict, result_data, file_path=None, raw_text=None, context=None):
+    if not GEMINI_API_KEY:
+        return "AI explanations are unavailable. The Gemini API key is not configured."
+    try:
+        model = genai.GenerativeModel('gemini-1.5-flash-latest')
+        result_data_for_prompt = result_data.copy()
+        result_data_for_prompt.pop('result_image', None)
+        result_data_for_prompt.pop('waveform_image', None)
+        prompt_text = f"""You are an AI assistant...""" # (Full prompt omitted for brevity)
+        if raw_text:
+            prompt_text += f"\n\nOriginal Input Text:\n---\n{raw_text}\n---"
+        prompt_parts = [prompt_text]
+        if file_path and os.path.exists(file_path):
+            mime_type, _ = mimetypes.guess_type(file_path)
+            if mime_type and ('video' in mime_type or 'audio' in mime_type or 'image' in mime_type):
+                media_file = genai.upload_file(path=file_path)
+                prompt_parts.append(media_file)
+        response = model.generate_content(prompt_parts)
+        if 'media_file' in locals() and media_file:
+            genai.delete_file(media_file.name)
+        return response.text
+    except Exception as e:
+        error_message = f"Could not generate AI explanation. The API call failed. (Error: {e})"
+        print(f"ERROR [Gemini]: {error_message}")
+        return error_message
+
+app = Flask(__name__)
+CORS(app, resources={r"/ext/*": {"origins": "*"}})
+app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['SECRET_KEY'] = 'a-very-secret-key-change-it-later'
+USERS_FILE = 'users.json'
+HISTORY_FILE = 'history.json'
+
+# --- FIX: Create a global lock for the history file ---
+history_lock = Lock()
+
+def load_users():
+    if not os.path.exists(USERS_FILE):
+        return {"admin": {"password": "admin", "email": "admin@example.com", "role": "admin", "active": True}}
+    with open(USERS_FILE, 'r') as f:
+        return json.load(f)
+
+def save_users(users):
+    with open(USERS_FILE, 'w') as f:
+        json.dump(users, f, indent=4)
+
+def load_history():
+    """Loads the history file, handling potential corruption."""
+    if not os.path.exists(HISTORY_FILE):
+        return {}
+    with open(HISTORY_FILE, 'r') as f:
+        try:
+            content = f.read()
+            if not content: return {}
+            return json.loads(content)
+        except json.JSONDecodeError:
+            # --- FIX: Gracefully handle corrupted file ---
+            print(f"WARNING: Corrupted history file ('{HISTORY_FILE}') detected. Backing up and starting fresh.")
+            os.rename(HISTORY_FILE, f"{HISTORY_FILE}.corrupted.{int(time.time())}")
+            return {}
+
+def save_history(history):
+    with open(HISTORY_FILE, 'w') as f:
+        json.dump(history, f, indent=4)
+
+def add_history_entry(username, tool, verdict, details):
+    # --- FIX: Use the lock to make this function thread-safe ---
+    with history_lock:
+        history = load_history()
+        if username not in history:
+            history[username] = []
+        
+        entry = {
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "tool": tool,
+            "verdict": verdict,
+            "details": details
+        }
+        history[username].insert(0, entry)
+        save_history(history)
+
+def generate_jwt(username):
+    payload = {'sub': username, 'iat': datetime.utcnow(), 'exp': datetime.utcnow() + timedelta(hours=24)}
+    return jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
+
+def get_user_from_jwt(token):
+    try:
+        payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+        return payload['sub']
+    except (jwt.ExpiredSignatureError, jwt.InvalidTokenError):
+        return None
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' not in session:
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' not in session or session.get('role') != 'admin':
+            flash("You don't have permission to access this page.", "error")
+            return redirect(url_for('dashboard'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+ALLOWED_MEDIA_EXTENSIONS = {'mp4', 'mov', 'avi', 'mkv', 'wav', 'mp3', 'flac', 'jpg', 'jpeg', 'png', 'webp'}
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_MEDIA_EXTENSIONS
+
+@app.route('/', methods=['GET', 'POST'])
+def login():
+    if 'username' in session:
+        return redirect(url_for('dashboard'))
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        users = load_users()
+        if username in users and users[username]['password'] == password:
+            if users[username]['active']:
+                session['username'] = username
+                session['role'] = users[username]['role']
+                return redirect(url_for('dashboard'))
+            else:
+                flash("Your account is pending approval.", "warning")
+        else:
+            flash("Invalid username or password.", "error")
+    return render_template('login.html')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        email = request.form['email']
+        users = load_users()
+        if username in users:
+            flash("Username already exists.", "error")
+        else:
+            users[username] = {'password': password, 'email': email, 'role': 'user', 'active': False}
+            save_users(users)
+            flash("Registration successful! Please wait for admin approval.", "success")
+            return redirect(url_for('login'))
+    return render_template('register.html')
+
+@app.route('/ext/login', methods=['POST'])
+def ext_login():
+    data = request.get_json()
+    if not data or 'username' not in data or 'password' not in data:
+        return jsonify({'error': 'Username and password are required.'}), 400
+    username = data['username']
+    password = data['password']
+    users = load_users()
+    user = users.get(username)
+    if user and user['password'] == password and user['active']:
+        token = generate_jwt(username)
+        return jsonify({'token': token})
+    else:
+        return jsonify({'error': 'Invalid username or password.'}), 401
+
+@app.route('/ext/analyze_urls_token', methods=['POST'])
+def ext_analyze_urls_token():
+    auth_header = request.headers.get('Authorization')
+    if not auth_header or not auth_header.startswith('Bearer '):
+        return jsonify({'error': 'Authorization token is missing or invalid.'}), 401
+    token = auth_header.split(' ')[1]
+    username = get_user_from_jwt(token)
+    if not username:
+        return jsonify({'error': 'Invalid or expired token.'}), 401
+    data = request.get_json()
+    if not data or 'urls' not in data or not isinstance(data['urls'], list):
+        return jsonify({'error': 'Invalid request. A JSON array of URLs is required.'}), 400
+    urls_to_scan = data['urls']
+    analysis_results = []
+    
+    # (Duplicated code block from user input, will remove this part in final thought)
+    def analyze_single_url_wrapper(url):
+        try:
+            result, err = analyze_url(url)
+            if err:
+                return {"url": url, "verdict": "Error", "error": str(err)}
+            else:
+                verdict = "Malicious" if result.get('is_malicious') else "Safe"
+                add_history_entry(username, "URL Scan (Extension)", verdict, f"{url[:50]}...")
+                return {"url": url, "verdict": verdict, "risk_score": result.get('risk_score')}
+        except Exception as e:
+            return {"url": url, "verdict": "Error", "error": f"Critical failure: {e}"}
+    
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        analysis_results = list(executor.map(analyze_single_url_wrapper, urls_to_scan))
+    return jsonify({"results": analysis_results})
+
+
+@app.route('/ext/analyze_email_content', methods=['POST'])
+def ext_analyze_email_content():
+    auth_header = request.headers.get('Authorization')
+    if not auth_header or not auth_header.startswith('Bearer '):
+        return jsonify({'error': 'Authorization token is missing or invalid.'}), 401
+    token = auth_header.split(' ')[1]
+    username = get_user_from_jwt(token)
+    if not username:
+        return jsonify({'error': 'Invalid or expired token.'}), 401
+    data = request.get_json()
+    email_text = data.get('email_text', '')
+    urls_to_scan = data.get('urls', [])
+    email_verdict = "Not Scanned"
+    if email_text:
+        email_result, email_err = analyze_email(email_text)
+        if email_err:
+            email_verdict = "Analysis Error"
+        else:
+            email_verdict = "Phishing" if email_result.get('is_phishing') else "Not Phishing"
+        add_history_entry(username, "Email Scan (Extension)", email_verdict, f"{email_text[:50]}...")
+    url_analysis_results = []
+    if urls_to_scan:
+        def analyze_single_url_wrapper(url):
+            result, err = analyze_url(url)
+            if err: return {"url": url, "verdict": "Error", "error": str(err)}
+            verdict = "Malicious" if result.get('is_malicious') else "Safe"
+            add_history_entry(username, "URL Scan (Extension)", verdict, f"{url[:50]}...")
+            return {"url": url, "verdict": verdict, "risk_score": result.get('risk_score')}
+        with ThreadPoolExecutor(max_workers=10) as executor:
+            url_analysis_results = list(executor.map(analyze_single_url_wrapper, urls_to_scan))
+    return jsonify({"email_verdict": email_verdict, "url_results": url_analysis_results})
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash("You have been logged out.", "success")
+    return redirect(url_for('login'))
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    history = load_history()
+    user_history = history.get(session['username'], [])
+    return render_template('index.html', history=user_history)
+
+@app.route('/admin')
+@admin_required
+def admin_panel():
+    users = load_users()
+    history = load_history()
+    return render_template('admin_panel.html', users=users, history=history)
+
+@app.route('/activate_user/<username>', methods=['POST'])
+@admin_required
+def activate_user(username):
+    users = load_users()
+    if username in users:
+        users[username]['active'] = True
+        save_users(users)
+        flash(f"User {username} has been activated.", "success")
+    else:
+        flash(f"User {username} not found.", "error")
+    return redirect(url_for('admin_panel'))
+
+@app.route('/upload_video', methods=['POST'])
+@login_required
+def upload_video():
+    file = request.files.get('file')
+    if not file or not allowed_file(file.filename):
+        return jsonify({'error': 'Invalid file type'}), 400
+    filename = secure_filename(file.filename)
+    task_id = f"{uuid.uuid4()}_{filename}"
+    path = os.path.join(app.config['UPLOAD_FOLDER'], task_id)
+    file.save(path)
+    return jsonify({'task_id': task_id, 'filename': filename})
+
+@app.route('/stream_video_analysis/<task_id>')
+@login_required
+def stream_video_analysis(task_id):
+    username = session.get('username')
+    filename = request.args.get('filename', 'video_file')
+    path = os.path.join(app.config['UPLOAD_FOLDER'], task_id)
+    if '..' in task_id or not os.path.exists(path):
+        return Response("Invalid task ID", status=404)
+    def generate(current_user):
+        final_result = None
+        try:
+            # Assuming analyze_video is a generator
+            for data in analyze_video(path):
+                if data.get("type") == "result":
+                    final_result = data
+                    combined_verdict = f"Video: {data['verdict']}, Audio: {data['audio_verdict']}"
+                    add_history_entry(current_user, "Deepfake Video", combined_verdict, f"{filename}")
+                yield f"data: {json.dumps(data)}\n\n"
+            if final_result:
+                video_verdict = final_result['verdict']
+                video_exp = get_gemini_explanation("Video Analysis", video_verdict, final_result, file_path=path)
+                yield f"data: {json.dumps({'type': 'video_explanation', 'explanation': video_exp})}\n\n"
+                video_context = f"..."
+                audio_verdict = final_result['audio_verdict']
+                audio_exp = get_gemini_explanation("Audio Analysis", audio_verdict, final_result, file_path=path, context=video_context)
+                yield f"data: {json.dumps({'type': 'audio_explanation', 'explanation': audio_exp})}\n\n"
+        except Exception as e:
+            print(f"ERROR in local analysis stream: {e}")
+            yield f"data: {json.dumps({'type': 'error', 'message': f'Critical error: {e}'})}\n\n"
+        finally:
+            if os.path.exists(path):
+                os.remove(path)
+    return Response(generate(username), mimetype='text/event-stream')
+
+@app.route('/predict_image', methods=['POST'])
+@login_required
+def predict_image():
+    file = request.files.get('file')
+    if not file or not allowed_file(file.filename):
+        return jsonify({'error': 'Invalid file'}), 400
+    filename = secure_filename(file.filename)
+    unique_filename = f"{uuid.uuid4()}_{filename}"
+    path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
+    file.save(path)
+    try:
+        result, err = analyze_image(path)
+        if err: return jsonify({'error': err}), 500
+        verdict = "FAKE" if result['average_confidence'] > 0.5 else "REAL"
+        add_history_entry(session['username'], "Deepfake Image", verdict, f"{filename} ({result['average_confidence']:.2%})")
+        explanation = get_gemini_explanation("Deepfake Image", verdict, result, file_path=path)
+        return jsonify({"verdict": verdict, **result, "explanation": explanation})
+    finally:
+        if os.path.exists(path): os.remove(path)
+
+@app.route('/predict_audio', methods=['POST'])
+@login_required
+def predict_audio():
+    file = request.files.get('file')
+    if not file or not allowed_file(file.filename):
+        return jsonify({'error': 'Invalid file'}), 400
+    filename = secure_filename(file.filename)
+    unique_filename = f"{uuid.uuid4()}_{filename}"
+    path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
+    file.save(path)
+    try:
+        result, err = analyze_audio(path)
+        if err: return jsonify({'error': err}), 500
+        verdict = "FAKE" if result['prediction'] == 0 else "REAL"
+        add_history_entry(session['username'], "Deepfake Audio", verdict, f"{filename} ({result['confidence']:.2%})")
+        explanation = get_gemini_explanation("Deepfake Audio", verdict, result, file_path=path)
+        return jsonify({"verdict": verdict, **result, "explanation": explanation})
+    finally:
+        if os.path.exists(path): os.remove(path)
+
+@app.route('/predict_combined', methods=['POST'])
+@login_required
+def predict_combined():
+    email_text = request.json.get('text', '')
+    url_text = request.json.get('url', '')
+    if not email_text and not url_text:
+        return jsonify({'error': 'No input provided'}), 400
+    email_explanation = None
+    email_verdict = "Not Scanned"
+    if email_text:
+        email_result, email_err = analyze_email(email_text)
+        if email_err: return jsonify({'error': f"Email analysis failed: {email_err}"}), 500
+        email_verdict = "Phishing" if email_result.get('is_phishing') else "Not Phishing"
+        add_history_entry(session['username'], "Email Scan", email_verdict, f"{email_text[:30]}...")
+        email_explanation = get_gemini_explanation("Email Phishing", email_verdict, email_result, raw_text=email_text)
+    urls_to_scan = re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', email_text)
+    if url_text and url_text not in urls_to_scan:
+        urls_to_scan.append(url_text)
+    url_results = []
+    if urls_to_scan:
+        for url in urls_to_scan:
+            result, err = analyze_url(url)
+            if not err:
+                verdict = "Malicious" if result.get('is_malicious') else "Safe"
+                explanation = get_gemini_explanation("Malicious URL", verdict, result, raw_text=url)
+                url_results.append({"url": url, "verdict": verdict, "risk_score": result.get('risk_score'), "explanation": explanation})
+                add_history_entry(session['username'], "URL Scan", verdict, f"{url[:50]}...")
+    return jsonify({"email_verdict": email_verdict, "email_explanation": email_explanation, "urls_found": len(urls_to_scan), "url_analysis": url_results})
+
+def load_all_models():
+    print("--- Pre-loading all AI models into memory ---")
+    load_video_model()
+    load_audio_model()
+    load_url_model()
+    load_email_model()
+    print("\n--- All models loaded. Server is ready. ---")
+
+if __name__ == '__main__':
+    if not os.path.exists(app.config['UPLOAD_FOLDER']):
+        os.makedirs(app.config['UPLOAD_FOLDER'])
+    load_all_models()
+    app.run(host='0.0.0.0', port=5000, debug=True)
