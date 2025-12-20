@@ -43,6 +43,12 @@ Due to GitHub file size limitations, trained model files are hosted externally.
 
 📥 **Email Phishing Detection Model (Google Drive):**  
 https://drive.google.com/file/d/1zcrjfiw8W_UzEf9v2TwxDWEzqkF2kiFb/view?usp=sharing
+📥 **Deepfake Video Detection Model:**  
+https://drive.google.com/file/d/1xU-EqLqxdxxQ3O2n4S9W5ReM3lJ1kSAh/view?usp=sharing
+📥 **Deepfake Audio Detection Model:**  
+https://drive.google.com/file/d/1O72FxQrJrGeFr61h36fGWyXUERjMgMZK/view?usp=sharing
+📥 **Malicious URL Detection Model:**  
+https://drive.google.com/file/d/1LjIH52bd8KNzfj8RbXO4zsXtqpphae5E/view?usp=sharing
 
 ---
 
