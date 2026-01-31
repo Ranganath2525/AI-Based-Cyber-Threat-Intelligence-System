@@ -1,12 +1,16 @@
 # Virtual environment
 venv/
 
-# Large ML models
-saved_model/
-*.h5
+# Ignore actual model files
+aFull_project/**/saved_model/*
+!aFull_project/**/saved_model/.gitkeep
+
+# Ignore ML model formats
 *.pkl
-*.pt
+*.pth
+*.h5
 *.onnx
+
 
 # FFmpeg & binaries
 ffmpeg-8.0-essentials_build/
